@@ -43,8 +43,7 @@ $container["token"] = function ($container) {
 
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
-        "path" => "/",
-        "ignore" => ["/token", "/info"],
+        "path" => [],
         "secret" => getenv("JWT_SECRET"),
         "logger" => $container["logger"],
         "attribute" => false,
