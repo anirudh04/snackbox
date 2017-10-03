@@ -15,11 +15,10 @@
 
 namespace App;
 
-use Spot\EntityInterface;
-use Spot\MapperInterface;
+use Spot\EntityInterface as Entity;
 use Spot\EventEmitter;
+use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
-use Psr\Log\LogLevel;
 
 class Discussion_Answers extends \Spot\Entity
 {
@@ -34,35 +33,16 @@ class Discussion_Answers extends \Spot\Entity
             "answer" => ["type" => "string"],
             "timestamp" => ["type" => "datetime"],
             
-            ];
+        ];
     }
 
-    public static function events(EventEmitter $emitter)
-    {
-        $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->uid = (new Base62)->encode(random_bytes(9));
-        });
+    public static function relations(Mapper $mapper, Entity $entity) {
+        return [
 
-        $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->updated_at = new \DateTime();
-        });
-    }
-    public function timestamp()
-    {
-        return $this->updated_at->getTimestamp();
-    }
-
-    public function etag()
-    {
-        return md5($this->uid . $this->timestamp());
-    }
-
-    public function clear()
-    {
-        $this->data([
-            "order" => null,
-            "title" => null,
-            "completed" => null
-        ]);
+            'Questions' => $mapper->belongsTo($entity, 'App\Discussion_Questions', 'question_id'),
+            'Owner' => $mapper->belongsTo($entity, 'App\User', 'user_id')
+            
+        ];
+        
     }
 }

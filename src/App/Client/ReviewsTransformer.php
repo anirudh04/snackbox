@@ -15,22 +15,20 @@
 
 namespace App;
 
-use App\Todo;
+use App\Reviews;
 use League\Fractal;
 
 class ReviewsTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    public function transform(Reviews $reviews)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
-            ]
+            "review_id" => (integer)$reviews->review_id ?: 0,
+            "plan_id" => (integer)$reviews->order ?: 0,
+            "user_name" => (string)$reviews->Owner['user_name'] ?: null,
+            "message" => (string)$reviews->message ?: null,
+            "title" => (string)$reviews->name ?: null,
         ];
     }
 }

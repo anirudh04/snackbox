@@ -15,11 +15,10 @@
 
 namespace App;
 
-use Spot\EntityInterface;
-use Spot\MapperInterface;
+use Spot\EntityInterface as Entity;
 use Spot\EventEmitter;
+use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
-use Psr\Log\LogLevel;
 
 class User extends \Spot\Entity
 {
@@ -42,32 +41,12 @@ class User extends \Spot\Entity
             ];
     }
 
-    public static function events(EventEmitter $emitter)
-    {
-        $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->uid = (new Base62)->encode(random_bytes(9));
-        });
-
-        $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->updated_at = new \DateTime();
-        });
-    }
-    public function timestamp()
-    {
-        return $this->updated_at->getTimestamp();
-    }
-
-    public function etag()
-    {
-        return md5($this->uid . $this->timestamp());
-    }
-
-    public function clear()
-    {
-        $this->data([
-            "order" => null,
-            "title" => null,
-            "completed" => null
-        ]);
+     public static function relations(Mapper $mapper, Entity $entity) {
+        return [
+        'Review' => $mapper->hasMany($entity, 'App\Reviews', 'user_id'),
+        'Question' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'user_id'),
+        'Answer' => $mapper->hasMany($entity, 'App\Discussion_Answers', 'user_id')
+        
+        ];
     }
 }

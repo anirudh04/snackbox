@@ -15,22 +15,34 @@
 
 namespace App;
 
-use App\Todo;
+use App\Plan;
 use League\Fractal;
 
-class PlansTransformer extends Fractal\TransformerAbstract
+class PlanTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    private $params = [];
+
+    function __construct($params = []) {
+        $this->params = $params;
+        $this->params['likes'] = 0;
+    }
+
+    public function transform(Plan $plan)
     {
+
+        $appreciates = null;
+        $appreciates = $plan->Likes;
+        $this->params['likes'] =  count($appreciates);
+
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
-            ]
+            "id" => (integer)$plan->plan_id ?: 0,
+            "likes" => (integer) $this->params['likes'] ?: 0,
+            "logo" => (string) $plan->Company['logo'] ?: null,
+            "converison" => (string)$plan->conversion ?: null,
+            "difficulty" => (string)$plan->difficulty ?: null,
+            "name" => (string)$plan->plan_name ?: 0
+
         ];
     }
 }

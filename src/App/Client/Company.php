@@ -20,29 +20,30 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Reviews extends \Spot\Entity
+class Company extends \Spot\Entity
 {
-    protected static $table = "reviews";
+    protected static $table = "companies";
 
     public static function fields()
     {
         return [
-            "review_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
-            "plan_id" => ["type" => "integer","unsigned"=>true],
-            "user_id" => ["type" => "integer","unsigned"=>true],
+            "company_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
+            "logo" => ["type" => "string", "unsigned" => true], 
+            "about" => ["type" => "string"],
+            "rating" => ["type" => "decimal"],
+            "type" => ["type" => "string"],
             "name" => ["type" => "string"],
-            "message" => ["type" => "string"],
+            "email" => ["type" => "string"],
+            "phone" => ["type" => "integer"],
             "timestamp" => ["type" => "datetime"],
-            
-            ];
+            "password" => ["type" => "string"],
+            "status" => ["type" => "boolean"],
+        ];
     }
 
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
-
-        'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id'),
-        'Owner' => $mapper->belongsTo($entity, 'App\User', 'user_id')
-         
+        'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id')
         ];
     }
 }

@@ -15,22 +15,28 @@
 
 namespace App;
 
-use App\Todo;
+use App\Discussion_Questions;
 use League\Fractal;
 
 class Discussion_QuestionsTransformer extends Fractal\TransformerAbstract
 {
+    protected $defaultIncludes = [
+        'answers'
+    ];
 
-    public function transform(Todo $todo)
+
+    public function transform(Discussion_Questions $discussion_questions)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
-            ]
+            "id" => (integer)$discussion_questions->question_id?: 0,
+            "question" => (string)$discussion_questions->question ?: null,
+            "user_name" => (string)$discussion_questions->Owner['user_name'] ?: null,
+
         ];
+    }
+
+    public function includeanswers(Discussion_Questions $discussion_questions) {
+        $answers = $discussion_questions->Answers;
+        return $this->collection($answers, new Discussion_AnswersTransformer);
     }
 }

@@ -15,21 +15,21 @@
 
 namespace App;
 
-use App\Todo;
+use App\User;
 use League\Fractal;
 
 class UserTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    public function transform(User $user)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
+            "uid" => (string)$user->uid ?: null,
+            "order" => (integer)$user->order ?: 0,
+            "title" => (string)$user->title ?: null,
+            "completed" => !!$user->completed,
             "links"        => [
-                "self" => "/todos/{$todo->uid}"
+                "self" => "/users/{$user->uid}"
             ]
         ];
     }
