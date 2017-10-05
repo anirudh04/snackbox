@@ -25,24 +25,25 @@ class Plan extends \Spot\Entity
             "timestamp" => ["type" => "datetime"],
             "expiry_date" => ["type" => "datetime"],
             "about" => ["type" => "string"],
-            ];
+        ];
     }
 
     public function clear()
     {
         $this->data([
-            
+
         ]);
     }
 
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
-        
-        'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
-        'Likes' => $mapper->hasMany($entity, 'App\Likes', 'plan_id'),
-        'Reviews' => $mapper->hasMany($entity, 'App\Reviews', 'plan_id'),
-        'Discussion' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'plan_id')
 
+            'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
+            'Likes' => $mapper->hasMany($entity, 'App\Likes', 'plan_id'),
+            'Reviews' => $mapper->hasMany($entity, 'App\Reviews', 'plan_id'),
+            'Discussion' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'plan_id'),
+            'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'plan_id'),
+            'User' => $mapper->belongsto($entity, 'App\User', 'User_id')
         ];
     }
 }

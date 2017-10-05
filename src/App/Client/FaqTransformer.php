@@ -15,21 +15,18 @@
 
 namespace App;
 
-use App\Todo;
+use App\Faq;
 use League\Fractal;
 
 class FaqTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    public function transform(Faq $faq)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
+            "faq_id" => (integer)$faq->faq_id ?: 0,
+            "question" => (string)$faq->question ?: null,
+            "answer" => (string)$faq->answer ?: null
             ]
         ];
     }

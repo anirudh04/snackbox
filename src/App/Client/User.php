@@ -37,16 +37,18 @@ class User extends \Spot\Entity
             "address" => ["type" => "string"],
             "cv" => ["type" => "string"],
             "timestamp" => ["type" => "datetime"],
-             "status" => ["type" => "boolean"],
-            ];
+            "status" => ["type" => "boolean"],
+        ];
     }
 
-     public static function relations(Mapper $mapper, Entity $entity) {
+    public static function relations(Mapper $mapper, Entity $entity) {
         return [
-        'Review' => $mapper->hasMany($entity, 'App\Reviews', 'user_id'),
-        'Question' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'user_id'),
-        'Answer' => $mapper->hasMany($entity, 'App\Discussion_Answers', 'user_id')
-        
+            'Review' => $mapper->hasMany($entity, 'App\Reviews', 'user_id'),
+            'Question' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'user_id'),
+            'Answer' => $mapper->hasMany($entity, 'App\Discussion_Answers', 'user_id'),
+            'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'user_id'),
+            'Bank_Details' => $mapper->hasMany($entity, 'App\Bank_Details', 'user_id'),
+            'Plan' => $mapper->hasManyThrough($entity, 'App\Plan', 'user_id'),
         ];
     }
 }

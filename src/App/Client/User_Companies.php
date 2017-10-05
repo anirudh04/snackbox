@@ -20,6 +20,8 @@ use Spot\MapperInterface;
 use Spot\EventEmitter;
 use Tuupola\Base62;
 use Psr\Log\LogLevel;
+use App\User;
+use App\Company;
 
 class User_Companies extends \Spot\Entity
 {
@@ -33,35 +35,27 @@ class User_Companies extends \Spot\Entity
             "user_id" => ["type" => "integer","unsigned"=>true],
             "timestamp" => ["type" => "datetime"],
             
-            ];
+        ];
     }
 
-    public static function events(EventEmitter $emitter)
-    {
-        $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->uid = (new Base62)->encode(random_bytes(9));
-        });
+    $app->get("/user_companies/{id}", function ($request, $response, $arguments) {
+      $id = $arguments['id'];
+      $user_companies = $this->spot->mapper("App\Company")
+      ->query("SELECT user_companies.company_id , companies.company_name compnaies.logo,companies.rating,comapnies.name,companies.enrolled
+        from companies NATURAL JOIN user_companies NATURAL JOIN user ON  (user_companies.user_id= user.user_id AND  user_companies.company_id=companies.companies_id) WHERE user.  );
 
-        $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->updated_at = new \DateTime();
-        });
-    }
-    public function timestamp()
-    {
-        return $this->updated_at->getTimestamp();
-    }
+       $fractal = new Manager();
+       $fractal->setSerializer(new DataArraySerializer);
 
-    public function etag()
-    {
-        return md5($this->uid . $this->timestamp());
-    }
+       $resource = new Collection($user_companies, new CompanyTransformer);
+       $data = $fractal->createData($resource)->toArray();
 
-    public function clear()
-    {
-        $this->data([
-            "order" => null,
-            "title" => null,
-            "completed" => null
-        ]);
-    }
+       return $response->withStatus(200)
+       ->withHeader("Content-Type", "application/json")
+       ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+   });
+
+
+
 }
+

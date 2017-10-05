@@ -24,10 +24,12 @@ class CompanyTransformer extends Fractal\TransformerAbstract
     public function transform(Company $company)
     {
         return [
-            "uid" => (string)$company->uid ?: null,
-            "order" => (integer)$company->order ?: 0,
-            "title" => (string)$company->title ?: null,
-            "completed" => !!$company->completed
+            "company_id" => (integer)$company->company_id ?: 0,
+            "logo" => (string)$company->logo ?: null,
+            "rating" => $company->rating ?: null,
+            "name" => (string)$company->name ?: null,
+            "enrolled" => (integer)$company->enrolled ?: 0,
+            
         ];
     }
 }

@@ -18,12 +18,12 @@ namespace App;
 use App\Plan;
 use League\Fractal;
 
-class PlanTransformer extends Fractal\TransformerAbstract
+class CompanyPlanTransformer extends Fractal\TransformerAbstract
 {
 
     private $params = [];
-    function __construct($params = []) 
-    {
+
+    function __construct($params = []) {
         $this->params = $params;
         $this->params['likes'] = 0;
     }
@@ -38,10 +38,10 @@ class PlanTransformer extends Fractal\TransformerAbstract
         return [
             "id" => (integer)$plan->plan_id ?: 0,
             "likes" => (integer) $this->params['likes'] ?: 0,
-            "logo" => (string) $plan->Company['logo'] ?: null,
             "converison" => (string)$plan->conversion ?: null,
             "difficulty" => (string)$plan->difficulty ?: null,
-            "name" => (string)$plan->name ?: null
+            "name" => (string)$plan->plan_name ?: null
+
         ];
     }
 }

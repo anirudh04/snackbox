@@ -27,8 +27,7 @@ class SinglePlanTransformer extends Fractal\TransformerAbstract
         'discussions'
 
     ];
-
-
+    
     public function transform(Plan $plan)
     {
 

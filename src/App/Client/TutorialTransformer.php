@@ -15,21 +15,18 @@
 
 namespace App;
 
-use App\Todo;
+use App\Tutorial;
 use League\Fractal;
 
 class TutorialTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    public function transform(Tutorial $tutorial)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
+            "id" => (integer)$tutorial->tutorial_id ?: 0,
+            "name" => (string)$tutorial->tutorial_name ?: null,
+            "link" => (string)$tutorial->tutorial_link ?: null
             ]
         ];
     }

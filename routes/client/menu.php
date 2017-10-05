@@ -1,9 +1,9 @@
 <?php
 
-use App\Company;
-use App\CompanyTransformer;
-use App\SingleCompanyTransformer;
-
+use App\User;
+use App\Bank_Details;
+use App\User_detailTransformer;
+use App\Bank_DetailsPlanTransformer;
 
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
@@ -15,15 +15,15 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
-$app->get("/companies", function ($request, $response, $arguments) {
+$app->get("/details", function ($request, $response, $arguments) {
 
-	$companies = $this->spot->mapper("App\Company")
+	$details = $this->spot->mapper("App\User")
         ->all();
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
 
-    $resource = new Collection($companies, new CompanyTransformer);
+    $resource = new Collection($details, new User_DetailTransformer);
     $data = $fractal->createData($resource)->toArray();
 
 	return $response->withStatus(200)
@@ -33,13 +33,12 @@ $app->get("/companies", function ($request, $response, $arguments) {
 
 
 
-$app->get("/company/{id}", function ($request, $response, $arguments) {
-
-	if (false === $companies = $this->spot->mapper("App\Company")->first([
-        "company_id" => $arguments["id"]
+$app->get("/detail/{id}", function ($request, $response, $arguments) {
+if (false === $plans = $this->spot->mapper("App\User")->first([
+        "user_id" => $arguments["id"]
     ])) 
 {
-        throw new NotFoundException(" Company not found.", 404);
+        throw new NotFoundException(" Plan not found.", 404);
     };
 
     if ($this->cache->isNotModified($request, $response)) {
@@ -49,7 +48,7 @@ $app->get("/company/{id}", function ($request, $response, $arguments) {
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
-    $resource = new Item($companies, new SingleCompanyTransformer);
+    $resource = new Item($plans, new User_DetailTransformer);
     $data = $fractal->createData($resource)->toArray();
 
 	return $response->withStatus(200)
@@ -58,7 +57,7 @@ $app->get("/company/{id}", function ($request, $response, $arguments) {
 });
 
 
-$app->post("/company/{id}/rate", function ($request, $response, $arguments) {
+$app->post("/registerPlan/{id}", function ($request, $response, $arguments) {
 
 	$data->message = "success";
 
@@ -67,7 +66,7 @@ $app->post("/company/{id}/rate", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->post("/plan/{id}/like", function ($request, $response, $arguments) {
+$app->post("/likePlan/{id}", function ($request, $response, $arguments) {
 
 	$data->message = "success";
 
@@ -76,7 +75,7 @@ $app->post("/plan/{id}/like", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->post("/plan/{id}/review", function ($request, $response, $arguments) {
+$app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
 
 	$data->message = "success";
 
@@ -85,7 +84,7 @@ $app->post("/plan/{id}/review", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->post("/plan/{id}/discussion", function ($request, $response, $arguments) {
+$app->post("/discussPlan/{id}", function ($request, $response, $arguments) {
 
 	$data->message = "success";
 

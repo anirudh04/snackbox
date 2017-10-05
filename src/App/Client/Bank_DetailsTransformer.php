@@ -15,21 +15,22 @@
 
 namespace App;
 
-use App\Todo;
+use App\Bank_Details;
 use League\Fractal;
 
 class Bank_DetailsTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Todo $todo)
+    public function transform(Bank_Details $bank_detail)
     {
         return [
-            "uid" => (string)$todo->uid ?: null,
-            "order" => (integer)$todo->order ?: 0,
-            "title" => (string)$todo->title ?: null,
-            "completed" => !!$todo->completed,
-            "links"        => [
-                "self" => "/todos/{$todo->uid}"
+            "bank_id" => (integer)$bank_detail->bank_id ?: 0,
+            "user_id" => (integer)$bank_detail->user_id ?: 0,
+            "holder_name" => (string)$bank_detail->holder_name ?: null,
+            "bank_name" => (string)$bank_detail->bank_name ?: null,
+            "ifsc" => (string)$bank_detail->ifsc ?: null,
+            "account_number" => (string)$bank_detail->account_number ?: null,
+            "pan_number" => (string)$bank_detail->pan_number ?: null,
             ]
         ];
     }
