@@ -26,6 +26,7 @@ class PlanTransformer extends Fractal\TransformerAbstract
     {
         $this->params = $params;
         $this->params['likes'] = 0;
+        $this->params['logo'] = null;
     }
 
     public function transform(Plan $plan)
@@ -38,8 +39,8 @@ class PlanTransformer extends Fractal\TransformerAbstract
         return [
             "id" => (integer)$plan->plan_id ?: 0,
             "likes" => (integer) $this->params['likes'] ?: 0,
-            "logo" => (string) $plan->Company['logo'] ?: null,
-            "converison" => (string)$plan->conversion ?: null,
+            "logo" => (string) $plan->logo ?: null,
+            "price_of_product" => (integer)$plan->price_of_product ?: 0,
             "difficulty" => (string)$plan->difficulty ?: null,
             "name" => (string)$plan->name ?: null
         ];

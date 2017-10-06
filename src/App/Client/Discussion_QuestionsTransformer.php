@@ -16,6 +16,8 @@
 namespace App;
 
 use App\Discussion_Questions;
+use App\Discussion_Answers;
+use App\Discussion_AnswersTransformer;
 use League\Fractal;
 
 class Discussion_QuestionsTransformer extends Fractal\TransformerAbstract

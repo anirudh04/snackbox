@@ -46,9 +46,5 @@ class Bank_Details extends \Spot\Entity
             'User' => $mapper->belongsto($entity, 'App\User', 'user_id')
         ];
     }
-
-
-
-
 }
 

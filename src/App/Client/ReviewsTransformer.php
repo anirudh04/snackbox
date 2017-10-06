@@ -14,7 +14,7 @@
  */
 
 namespace App;
-
+use App\User;
 use App\Reviews;
 use League\Fractal;
 
@@ -23,12 +23,13 @@ class ReviewsTransformer extends Fractal\TransformerAbstract
 
     public function transform(Reviews $reviews)
     {
+        
         return [
             "review_id" => (integer)$reviews->review_id ?: 0,
-            "plan_id" => (integer)$reviews->order ?: 0,
+            "plan_id" => (integer)$reviews->plan_id ?: 0,
             "user_name" => (string)$reviews->Owner['user_name'] ?: null,
             "message" => (string)$reviews->message ?: null,
-            "title" => (string)$reviews->name ?: null,
+            "name" => (string)$reviews->name ?: null
         ];
     }
 }

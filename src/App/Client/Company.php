@@ -44,8 +44,7 @@ class Company extends \Spot\Entity
 
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
-        'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id'),
-        'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id'),
+            'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id')
         ];
     }
 }

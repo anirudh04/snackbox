@@ -30,9 +30,7 @@ class Discussion_Questions extends \Spot\Entity
             "question_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "plan_id" => ["type" => "integer","unsigned"=>true], 
             "user_id" => ["type" => "integer","unsigned"=>true], 
-            "question" => ["type" => "string"],
-            "timestamp" => ["type" => "datetime"],
-            
+            "question" => ["type" => "string"]
             ];
     }
 

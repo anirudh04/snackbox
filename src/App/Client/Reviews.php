@@ -33,16 +33,15 @@ class Reviews extends \Spot\Entity
             "name" => ["type" => "string"],
             "message" => ["type" => "string"],
             "timestamp" => ["type" => "datetime"],
-            
-            ];
+        ];
     }
 
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
 
-        'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id'),
-        'Owner' => $mapper->belongsTo($entity, 'App\User', 'user_id')
-         
+            'Owner' => $mapper->belongsTo($entity, 'App\User', 'user_id'),
+            'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id')
+            
         ];
     }
 }

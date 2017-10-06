@@ -29,6 +29,7 @@ class CompanyTransformer extends Fractal\TransformerAbstract
             "rating" => $company->rating ?: null,
             "name" => (string)$company->name ?: null,
             "enrolled" => (integer)$company->enrolled ?: 0,
+            "type" => (integer)$company->type ?: 0,
             
         ];
     }

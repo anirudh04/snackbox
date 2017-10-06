@@ -38,33 +38,5 @@ class My_Plans extends \Spot\Entity
             
             ];
     }
-
-    public static function events(EventEmitter $emitter)
-    {
-        $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->uid = (new Base62)->encode(random_bytes(9));
-        });
-
-        $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->updated_at = new \DateTime();
-        });
-    }
-    public function timestamp()
-    {
-        return $this->updated_at->getTimestamp();
-    }
-
-    public function etag()
-    {
-        return md5($this->uid . $this->timestamp());
-    }
-
-    public function clear()
-    {
-        $this->data([
-            "order" => null,
-            "title" => null,
-            "completed" => null
-        ]);
-    }
 }
+   

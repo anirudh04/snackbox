@@ -30,8 +30,8 @@ class Discussion_Answers extends \Spot\Entity
             "answer_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "question_id" => ["type" => "integer","unsigned"=>true], 
             "user_id" => ["type" => "integer","unsigned"=>true], 
-            "answer" => ["type" => "string"],
-            "timestamp" => ["type" => "datetime"],
+            "answer" => ["type" => "string"]
+            
             
         ];
     }

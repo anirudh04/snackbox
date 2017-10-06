@@ -42,9 +42,9 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
     }   
 
     public function includeplans(Company $company) {
-        $plans = $company->Plan;
+        $plans = $company->Plans;
 
-        return $this->collection($plans, new PlanTransformer);
+        return $this->collection($plans, new CompanyPlanTransformer);
     }
 
     

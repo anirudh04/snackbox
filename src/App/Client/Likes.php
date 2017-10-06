@@ -29,9 +29,8 @@ class Likes extends \Spot\Entity
         return [
             "like_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "plan_id" => ["type" => "integer", "unsigned" => true], 
-            "user_id" => ["type" => "integer", "unsigned" => true],
-            "timestamp" => ["type" => "datetime"],
-            "status" => ["type" => "tinyint"],
+            "user_id" => ["type" => "integer", "unsigned" => true]
+           
             ];
     }
 
