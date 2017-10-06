@@ -21,15 +21,10 @@ use League\Fractal;
 class My_PlansTransformer extends Fractal\TransformerAbstract
 {
 
-private $params = [];
-    function __construct($params = []) 
-    {
-        $this->params = $params;
-        $this->params['logo'] = null;
-        $this->params['name'] = null;
+    protected $defaultIncludes = [
 
-    }
-
+        'companies'
+    ];
     
 
 
@@ -39,9 +34,9 @@ private $params = [];
         return [
             "plan_id" => (integer)$my_plans->plan_id ?: 0,
             "logo" => (string)$my_plans->logo ?: null,
-            "status" => (string)$my_plans->title ?: null,
+            "status" => (string)$my_plans->status ?: null,
             "name" => (string)$my_plans->name ?: null
             
-             ];
+        ];
     }
 }
