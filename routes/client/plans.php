@@ -5,13 +5,17 @@ use App\Company;
 use App\Reviews;
 use App\Likes;
 use App\User;
+use App\Bank_Details;
+use App\Bank_DetailsTransformer;
 use App\Discussion_Answers;
 use App\Discussion_Questions;
 use App\Discussion_AnswersTransformer;
 use App\Discussion_QuestionsTransformer;
-use App\User_Companies;
+use App\User_CompaniesTransformer;
 use App\ReviewsTransformer;
 use App\PlanTransformer;
+use App\My_Plans;
+use App\My_PlansTransformer;
 use App\SinglePlanTransformer;
 
 use Response\NotFoundResponse;
@@ -43,6 +47,28 @@ $app->get("/plans", function ($request, $response, $arguments)
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
+$app->get("/myplans/{id}", function ($request, $response, $arguments) 
+{
+
+  $id =1;
+  $plans = $this->spot->mapper("App\My_Plans")
+  ->query("SELECT plans.plan_id,plans.name,companies.logo,my_plans.status  FROM plans,my_plans,companies,user_companies WHERE user_companies.company_id=companies.company_id AND companies.company_id=plans.company_id AND my_plans.plan_id=plans.plan_id AND my_plans.user_id=$id" );
+
+
+  $fractal = new Manager();
+  $fractal->setSerializer(new DataArraySerializer);
+
+  $resource = new Collection($plans, new My_PlansTransformer);
+  $data = $fractal->createData($resource)->toArray();
+
+  return $response->withStatus(200)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
+
+
+
 $app->get("/plan/{id}", function ($request, $response, $arguments) 
 {
   if (false === $plans = $this->spot->mapper("App\Plan")->first([
@@ -66,6 +92,12 @@ $app->get("/plan/{id}", function ($request, $response, $arguments)
   ->withHeader("Content-Type", "application/json")
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
+
+
+
+
+
+
 
 $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
     $body = $request->getParsedBody();
@@ -115,11 +147,11 @@ $app->post("/discussPlanAnswer/{question_id}", function ($request, $response, $a
 {
 
    $body = $request->getParsedBody();
-   $discussanswer['user_id'] = 2;
-   $discussanswer['question_id'] =  $arguments["question_id"];
-   $discussanswer['answer'] = $body['answer'];
+   $discussquestion['user_id'] = 2;
+   $discussquestion['question_id'] =  $arguments["question_id"];
+   $discussquestion['answer'] = $body['answer'];
    
-   $newresponse = new Discussion_Answers($discussanswer);
+   $newresponse = new Discussion_Answers($discussquestion);
    $mapper = $this->spot->mapper("App\Discussion_Answers");
    $id = $mapper->save($newresponse);
 
@@ -154,33 +186,62 @@ else {
 });
 
 
- $app->post("/registerPlan/{id}", function ($request, $response, $arguments)
-  {
+$app->post("/discussPlanQuestion/{id}", function ($request, $response, $arguments) 
+{
 
-    $data->message = "success";
+   $body = $request->getParsedBody();
+   $discussquestion['plan_id'] =  $arguments["id"];
+   $discussquestion['user_id'] =2;
+   $discussquestion['question'] = $body['question'];
+   
+   $newresponse = new Discussion_Questions($discussquestion);
+   $mapper = $this->spot->mapper("App\Discussion_Questions");
+   $id = $mapper->save($newresponse);
 
-    return $response->withStatus(200)
+   if ($id) {
+
+     /* Serialize the response data. */
+     $fractal = new Manager();
+     $fractal->setSerializer(new DataArraySerializer);
+
+     $entity = $mapper->where(["question_id"=>$id]);
+
+     $data["status"] = "ok";
+     $data["id"] = $id;
+     $data["message"] = "Question added";
+
+     $resource = new Collection($entity, new Discussion_QuestionsTransformer());
+     $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+
+     return $response->withStatus(201)
+     ->withHeader("Content-Type", "application/json")
+     ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+   } 
+else {
+
+    $data["status"] = "error";
+    $data["message"] = "Error in inserting!";
+
+    return $response->withStatus(500)
     ->withHeader("Content-Type", "application/json")
     ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-  });
-
-
-
+  }
+});
 
 
 
 $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 
  $body = [
-   "user_id" => 4,
-   "plan_id" => $arguments["plan_id"]
+   "user_id" => 1,
+   "plan_id" => $arguments["plan_id"],
  ];
 
  $like = new Likes($body);
 
  if (false === $check = $this->spot->mapper("App\Likes")->first([
    "plan_id" => $arguments["plan_id"],
-   "username" =>  $this->token->decoded->username
+   "user_id" =>  1
  ])) 
  {
   $id = $this->spot->mapper("App\Likes")->save($like);
@@ -188,7 +249,7 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
   if ($id) {
 
    $data["status"] = "ok";
-   $data["message"] = "New like created.";
+   $data["message"] = " like ";
 
    return $response->withStatus(201)
    ->withHeader("Content-Type", "application/json")
@@ -196,7 +257,7 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
  } else {
 
   $data["status"] = "error";
-  $data["message"] = "Error in likeing!";
+  $data["message"] = "Error in liking!";
 
   return $response->withStatus(500)
   ->withHeader("Content-Type", "application/json")
@@ -211,7 +272,94 @@ else {
 });
 
 
+$app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments) {
 
+ $body = [
+   "user_id" => 2,
+   "plan_id" => $arguments["plan_id"],
+   "status"=>'Waiting'
+ ];
+
+ $my_plans = new My_Plans($body);
+
+ if (false === $check = $this->spot->mapper("App\My_Plans")->first([
+   "plan_id" => $arguments["plan_id"],
+   "user_id" =>  2,
+
+ ])) 
+ {
+  $id = $this->spot->mapper("App\My_Plans")->save($my_plans);
+
+  if ($id) {
+
+   $data["status"] = "ok";
+   $data["message"] = " like ";
+
+   return $response->withStatus(201)
+   ->withHeader("Content-Type", "application/json")
+   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+ } else {
+
+  $data["status"] = "error";
+  $data["message"] = "Error in liking!";
+
+  return $response->withStatus(500)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+}
+
+}
+else {
+
+  throw new NotFoundException("Already Bookmarked!", 404);
+}
+});
+
+
+// $app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
+// {
+
+//    $body = $request->getParsedBody();
+//    $bankdetails['user_id'] =  $arguments["id"];
+//    $bankdetails['holder_name'] =$body['holder_name'];
+//    $bankdetails['bank_name'] = $body['bank_name'];
+//    $bankdetails['ifsc'] = $body['ifsc'];
+//    $bankdetails['account_number'] = $body['account_number'];
+//    $bankdetails['pan_number'] = $body['pan_number'];
+   
+//    $newresponse = new Bank_Details($bankdetails);
+//    $mapper = $this->spot->mapper("App\Bank_Details");
+//    $id = $mapper->save($newresponse);
+
+//    if ($id) {
+
+//      /* Serialize the response data. */
+//      $fractal = new Manager();
+//      $fractal->setSerializer(new DataArraySerializer);
+
+//      $entity = $mapper->where(["bank_id"=>$id]);
+
+//      $data["status"] = "ok";
+//      $data["id"] = $id;
+//      $data["message"] = "Bank details successfully updated";
+
+//      $resource = new Collection($entity, new Bank_DetailsTransformer());
+//      $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+
+//      return $response->withStatus(201)
+//      ->withHeader("Content-Type", "application/json")
+//      ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+//    } 
+// else {
+
+//     $data["status"] = "error";
+//     $data["message"] = "Error in inserting!";
+
+//     return $response->withStatus(500)
+//     ->withHeader("Content-Type", "application/json")
+//     ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+//   }
+// });
 
  
 

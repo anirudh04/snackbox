@@ -34,7 +34,8 @@ class Plan extends \Spot\Entity
             'Likes' => $mapper->hasMany($entity, 'App\Likes', 'plan_id'),
             'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
             'Reviews' => $mapper->hasMany($entity, 'App\Reviews', 'plan_id'),
-            'Discussion' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'plan_id')
+            'Discussion' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'plan_id'),
+            // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'plan_id'),
         ];
     }
 }

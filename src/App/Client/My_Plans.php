@@ -31,12 +31,26 @@ class My_Plans extends \Spot\Entity
             "plan_reg_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "plan_id" => ["type" => "integer", "unsigned" => true], 
             "user_id" => ["type" => "integer","unsigned"=>true],
-            "company_id" => ["type" => "integer","unsigned"=>true],
             "status" => ["type" => "string"],
-            "timestamp" => ["type" => "datetime"],
-            "amount" => ["type" => "integer"],
-            
+            "timestamp" => ["type" => "datetime"]
             ];
     }
+
+
+
+
+// public static function relations(Mapper $mapper, Entity $entity) {
+//         return [
+
+//             // 'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
+//             // 'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id'),
+            
+//         ];
+//     }    
+
+
+
+
+
 }
    

@@ -34,8 +34,7 @@ class Bank_Details extends \Spot\Entity
             "bank_name" => ["type" => "string"],
             "ifsc" => ["type" => "string"],
             "account_number" => ["type" => "string"],
-            "pan_number" => ["type" => "string"],            
-            "timestamp" => ["type" => "datetime"],
+            "pan_number" => ["type" => "string"]            
         ];
     }
 
@@ -43,7 +42,7 @@ class Bank_Details extends \Spot\Entity
     public static function relations(Mapper $mapper, Entity $entity) 
     {
         return [
-            'User' => $mapper->belongsto($entity, 'App\User', 'user_id')
+            'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
         ];
     }
 }

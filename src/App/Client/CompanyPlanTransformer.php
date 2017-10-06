@@ -40,7 +40,7 @@ class CompanyPlanTransformer extends Fractal\TransformerAbstract
             "likes" => (integer) $this->params['likes'] ?: 0,
             "converison" => (string)$plan->conversion ?: null,
             "difficulty" => (string)$plan->difficulty ?: null,
-            "name" => (string)$plan->plan_name ?: null
+            "name" => (string)$plan->name ?: null
 
         ];
     }

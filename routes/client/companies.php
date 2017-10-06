@@ -18,7 +18,7 @@ use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/companies", function ($request, $response, $arguments) {
     $id=1;
-	$companies = $this->spot->mapper("App\Company")
+    $companies = $this->spot->mapper("App\Company")
     ->query("SELECT companies.company_id,companies.logo,companies.rating,companies.name,companies.enrolled,companies.type FROM plans,companies,user_companies WHERE user_companies.company_id=companies.company_id AND user_companies.user_id=1");
 
     $fractal = new Manager();
@@ -59,38 +59,43 @@ $app->get("/company/{id}", function ($request, $response, $arguments) {
 });
 
 
-$app->post("/company/{id}/rate", function ($request, $response, $arguments) {
+$app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
 
-	$data->message = "success";
+	$body = [
+     "user_id" => 1,
+     "company_id" => $arguments["id"],
+ ];
 
-	return $response->withStatus(200)
-    ->withHeader("Content-Type", "application/json")
-    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
+ $like = new Company_Rating($body);
 
-$app->post("/plan/{id}/like", function ($request, $response, $arguments) {
+ if (false === $check = $this->spot->mapper("App\Company_Rating")->first([
+     "company_id" => $arguments["id"],
+     "user_id" =>  1
+ ])) 
+ {
+  $id = $this->spot->mapper("App\Company_Rating")->save($like);
 
-	$data->message = "success";
+  if ($id) {
 
-	return $response->withStatus(200)
-    ->withHeader("Content-Type", "application/json")
-    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
+     $data["status"] = "ok";
+     $data["message"] = " rated ";
 
-$app->post("/plan/{id}/review", function ($request, $response, $arguments) {
+     return $response->withStatus(201)
+     ->withHeader("Content-Type", "application/json")
+     ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+ } else {
 
-	$data->message = "success";
+  $data["status"] = "error";
+  $data["message"] = "Error in Rating!";
 
-	return $response->withStatus(200)
-    ->withHeader("Content-Type", "application/json")
-    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
+  return $response->withStatus(500)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+}
 
-$app->post("/plan/{id}/discussion", function ($request, $response, $arguments) {
+}
+else {
 
-	$data->message = "success";
-
-	return $response->withStatus(200)
-    ->withHeader("Content-Type", "application/json")
-    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+  throw new NotFoundException("Already Bookmarked!", 404);
+}
 });

@@ -20,27 +20,28 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Reviews extends \Spot\Entity
+class Company_Rating extends \Spot\Entity
 {
-    protected static $table = "reviews";
+    protected static $table = "company_rating";
 
     public static function fields()
     {
         return [
-            "review_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
-            "plan_id" => ["type" => "integer","unsigned"=>true],
-            "user_id" => ["type" => "integer","unsigned"=>true],
-            "name" => ["type" => "string"],
-            "message" => ["type" => "string"],
+            "rating_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
+            "user_id" => ["type" => "integer", "unsigned" => true], 
+            "company_id" => ["type" => "integer", "unsigned" => true],
+            "rating" => ["type" => "decimal", "unsigned" => true],
+           
             ];
     }
+
+    
 
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
 
-            'Owner' => $mapper->belongsTo($entity, 'App\User', 'user_id'),
-            'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id')
-            
+        'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id')
+
         ];
     }
 }

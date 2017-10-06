@@ -48,5 +48,6 @@ class User extends \Spot\Entity
             'Answer' => $mapper->hasMany($entity, 'App\Discussion_Answers', 'user_id'),
             'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'user_id')
         ];
+
     }
 }
