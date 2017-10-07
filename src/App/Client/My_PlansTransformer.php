@@ -20,14 +20,7 @@ use League\Fractal;
 
 class My_PlansTransformer extends Fractal\TransformerAbstract
 {
-
-    protected $defaultIncludes = [
-
-        'companies'
-    ];
     
-
-
 
     public function transform(My_Plans $my_plans)
     {

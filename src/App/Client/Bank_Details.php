@@ -37,13 +37,12 @@ class Bank_Details extends \Spot\Entity
             "pan_number" => ["type" => "string"]            
         ];
     }
+  // public static function relations(Mapper $mapper, Entity $entity) {
+  //       return [
+  //           'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
+  //       ];
+  //       }
 
-
-    public static function relations(Mapper $mapper, Entity $entity) 
-    {
-        return [
-            'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
-        ];
-    }
+   
 }
 

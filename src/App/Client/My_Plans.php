@@ -42,15 +42,14 @@ class My_Plans extends \Spot\Entity
 // public static function relations(Mapper $mapper, Entity $entity) {
 //         return [
 
-//             // 'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
-//             // 'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id'),
+//             // 'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
             
 //         ];
-//     }    
+    }    
 
 
 
 
 
-}
+
    

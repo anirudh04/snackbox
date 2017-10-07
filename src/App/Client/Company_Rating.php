@@ -40,7 +40,9 @@ class Company_Rating extends \Spot\Entity
     public static function relations(Mapper $mapper, Entity $entity) {
         return [
 
-        'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id')
+        'Plan' => $mapper->belongsTo($entity, 'App\Plan', 'plan_id'),
+        'User' => $mapper->belongsTo($entity, 'App\User', 'user_id'),
+
 
         ];
     }

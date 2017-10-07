@@ -22,30 +22,31 @@ use Tuupola\Base62;
 
 class Company extends \Spot\Entity
 {
-    protected static $table = "companies";
+  protected static $table = "companies";
 
-    public static function fields()
-    {
-        return [
-            "company_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
-            "logo" => ["type" => "string", "unsigned" => true], 
-            "about" => ["type" => "string"],
-            "rating" => ["type" => "decimal"],
-            "type" => ["type" => "string"],
-            "name" => ["type" => "string"],
-            "enrolled" => ["type" => "integer"],
-            "email" => ["type" => "string"],
-            "phone" => ["type" => "integer"],
-            "timestamp" => ["type" => "datetime"],
-            "password" => ["type" => "string"],
-            "status" => ["type" => "boolean"],
-        ];
-    }
+  public static function fields()
+  {
+    return [
+      "company_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
+      "logo" => ["type" => "string", "unsigned" => true], 
+      "about" => ["type" => "string"],
+      "rating" => ["type" => "decimal"],
+      "type" => ["type" => "string"],
+      "name" => ["type" => "string"],
+      "enrolled" => ["type" => "integer"],
+      "email" => ["type" => "string"],
+      "phone" => ["type" => "integer"],
+      "timestamp" => ["type" => "datetime"],
+      "password" => ["type" => "string"],
+      "status" => ["type" => "boolean"],
+    ];
+  }
 
-    public static function relations(Mapper $mapper, Entity $entity) {
-        return [
-            'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id'),
-            'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
-        ];
-    }
+  public static function relations(Mapper $mapper, Entity $entity) {
+    return [
+      'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id'),
+      'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
+      // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
+    ];
+  }
 }

@@ -30,8 +30,7 @@ class Bank_DetailsTransformer extends Fractal\TransformerAbstract
             "bank_name" => (string)$bank_detail->bank_name ?: null,
             "ifsc" => (string)$bank_detail->ifsc ?: null,
             "account_number" => (string)$bank_detail->account_number ?: null,
-            "pan_number" => (string)$bank_detail->pan_number ?: null,
-            ]
+            "pan_number" => (string)$bank_detail->pan_number ?: null
         ];
     }
 }

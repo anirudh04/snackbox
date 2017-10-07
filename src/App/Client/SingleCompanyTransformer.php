@@ -26,13 +26,28 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
         'plans'
     ];
 
+    private $params = [];
+    function __construct($params = []) 
+    {
+        $this->params = $params;
+        $this->params['rating']=0;
+        $this->params['plans']=0;
+        
+    }
+
 
     public function transform(Company $company)
     {
 
+
+        $number = null;
+        $number = $company->Plans;
+        $this->params['plans']=count($number); 
+
         return [
             "id" => (integer)$company->company_id ?: 0,
             "logo" => (string) $company->logo?: null,
+            "total plans" => (string)$this->params['plans'] ? :0,
             "about" => (string) $company->about ?: null,
             "type" => (string)$company->type ?: null,
             "name" => (string)$company->name ?: null,

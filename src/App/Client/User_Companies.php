@@ -36,26 +36,18 @@ class User_Companies extends \Spot\Entity
             "timestamp" => ["type" => "datetime"],
             
         ];
-    }
+      }
 
-    $app->get("/user_companies/{id}", function ($request, $response, $arguments) {
-      $id = $arguments['id'];
-      $user_companies = $this->spot->mapper("App\Company")
-      ->query("SELECT user_companies.company_id , companies.company_name compnaies.logo,companies.rating,comapnies.name,companies.enrolled
-        from companies NATURAL JOIN user_companies NATURAL JOIN user ON  (user_companies.user_id= user.user_id AND  user_companies.company_id=companies.companies_id) WHERE user.  );
+    //     public static function relations(Mapper $mapper, Entity $entity) {
+    // return [
+    //   'Companies' => $mapper->hasManyThrough($entity, 'App\Companies','App\User','company_id','user_id')
+    //   // 'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
+    //   // // 'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
+    //   // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
+    // ];
+    // } 
+    
 
-       $fractal = new Manager();
-       $fractal->setSerializer(new DataArraySerializer);
+  }
 
-       $resource = new Collection($user_companies, new CompanyTransformer);
-       $data = $fractal->createData($resource)->toArray();
-
-       return $response->withStatus(200)
-       ->withHeader("Content-Type", "application/json")
-       ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-   });
-
-
-
-}
-
+    

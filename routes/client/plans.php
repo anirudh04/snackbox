@@ -76,7 +76,7 @@ $app->get("/myplans", function ($request, $response, $arguments)
 
   $id =2;
   $my_plans = $this->spot->mapper("App\My_Plans")
-  ->query("SELECT my_plans.plan_id,plans.name,my_plans.status,companies.logo FROM my_plans,plans,companies WHERE my_plans.plan_id=plans.plan_id AND companies.company_id=plans.company_id AND my_plans.user_id=$id AND my_plans.status IS NOT NULL");
+  ->query("SELECT my_plans.plan_id,plans.name,my_plans.status,companies.logo FROM my_plans,plans,companies WHERE my_plans.plan_id=plans.plan_id AND companies.company_id=plans.company_id AND my_plans.user_id=$id ");
 
 
   $fractal = new Manager();
@@ -308,50 +308,64 @@ else {
 });
 
 
-// $app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
-// {
+ $app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
+{
 
-//    $body = $request->getParsedBody();
-//    $bankdetails['user_id'] =  $arguments["id"];
-//    $bankdetails['holder_name'] =$body['holder_name'];
-//    $bankdetails['bank_name'] = $body['bank_name'];
-//    $bankdetails['ifsc'] = $body['ifsc'];
-//    $bankdetails['account_number'] = $body['account_number'];
-//    $bankdetails['pan_number'] = $body['pan_number'];
+   $body = $request->getParsedBody();
+   $bankdetails['user_id'] =  $arguments["id"];
+   $bankdetails['holder_name'] =$body['holder_name'];
+   $bankdetails['bank_name'] = $body['bank_name'];
+   $bankdetails['ifsc'] = $body['ifsc'];
+   $bankdetails['account_number'] = $body['account_number'];
+   $bankdetails['pan_number'] = $body['pan_number'];
 
-//    $newresponse = new Bank_Details($bankdetails);
-//    $mapper = $this->spot->mapper("App\Bank_Details");
-//    $id = $mapper->save($newresponse);
+  
+ if ($check = $this->spot->mapper("App\Bank_Details")->first([
+      "user_id" => $arguments["id"]
+    ]))
+ {
+   throw new NotFoundException("Already Bookmarked!", 404);
+ }
+ else{
 
-//    if ($id) {
+ 
+ 	 $newresponse = new Bank_Details($bankdetails);
+  $mapper = $this->spot->mapper("App\Bank_Details");
+  $id = $mapper->save($newresponse);
 
-//      /* Serialize the response data. */
-//      $fractal = new Manager();
-//      $fractal->setSerializer(new DataArraySerializer);
+  if ($id) {
 
-//      $entity = $mapper->where(["bank_id"=>$id]);
+   /* Serialize the response data. */
+   $fractal = new Manager();
+   $fractal->setSerializer(new DataArraySerializer);
 
-//      $data["status"] = "ok";
-//      $data["id"] = $id;
-//      $data["message"] = "Bank details successfully updated";
+   $entity = $mapper->where(["bank_id"=>$id]);
 
-//      $resource = new Collection($entity, new Bank_DetailsTransformer());
-//      $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+   $data["status"] = "ok";
+   $data["id"] = $id;
+   $data["message"] = "bank details added";
 
-//      return $response->withStatus(201)
-//      ->withHeader("Content-Type", "application/json")
-//      ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-//    } 
-// else {
+   $resource = new Collection($entity, new Bank_DetailsTransformer());
+   $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
 
-//     $data["status"] = "error";
-//     $data["message"] = "Error in inserting!";
+   return $response->withStatus(201)
+   ->withHeader("Content-Type", "application/json")
+   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+ } 
+ else
+ {
 
-//     return $response->withStatus(500)
-//     ->withHeader("Content-Type", "application/json")
-//     ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-//   }
-// });
+  $data["status"] = "error";
+  $data["message"] = "Error in inserting!";
 
+  return $response->withStatus(500)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+}
+
+}
+
+
+});
 
 
