@@ -17,6 +17,7 @@ use App\PlanTransformer;
 use App\My_Plans;
 use App\My_PlansTransformer;
 use App\SinglePlanTransformer;
+use App\HomeTransformer;
 
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
@@ -90,6 +91,24 @@ $app->get("/myplans", function ($request, $response, $arguments)
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
+
+$app->get("/home/{id}", function ($request, $response, $arguments) 
+{
+
+  $id =$arguments["id"];
+  $user = $this->spot->mapper("App\User")->query("SELECT user.user_id,user.user_name,COUNT(my_plans.plan_id) FROM user,my_plans WHERE user.user_id=my_plans.user_id AND user.user_id=$id AND my_plans.status='accepted'" );
+
+
+  $fractal = new Manager();
+  $fractal->setSerializer(new DataArraySerializer);
+
+  $resource = new Collection($user, new HomeTransformer);
+  $data = $fractal->createData($resource)->toArray();
+
+  return $response->withStatus(200)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
 
 $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
   $body = $request->getParsedBody();
@@ -259,7 +278,7 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 }
 else {
 
-  throw new NotFoundException("Already Bookmarked!", 404);
+  throw new NotFoundException("Already Liked!", 404);
 }
 });
 
@@ -307,7 +326,6 @@ else {
 }
 });
 
-
  $app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
 {
 
@@ -329,7 +347,7 @@ else {
  else{
 
  
- 	 $newresponse = new Bank_Details($bankdetails);
+   $newresponse = new Bank_Details($bankdetails);
   $mapper = $this->spot->mapper("App\Bank_Details");
   $id = $mapper->save($newresponse);
 
@@ -362,10 +380,14 @@ else {
   ->withHeader("Content-Type", "application/json")
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 }
-
 }
-
-
 });
+
+
+
+
+
+
+
 
 

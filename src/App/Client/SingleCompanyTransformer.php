@@ -23,7 +23,8 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
 
     protected $defaultIncludes = [
 
-        'plans'
+        'plans',
+        'companies'
     ];
 
     private $params = [];
@@ -44,10 +45,14 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
         $number = $company->Plans;
         $this->params['plans']=count($number); 
 
+        // $averagerating=null;
+        // $averagerating=$
+
         return [
             "id" => (integer)$company->company_id ?: 0,
             "logo" => (string) $company->logo?: null,
             "total plans" => (string)$this->params['plans'] ? :0,
+            // "total plans" => (string)$this->params['plans'] ? :0,
             "about" => (string) $company->about ?: null,
             "type" => (string)$company->type ?: null,
             "name" => (string)$company->name ?: null,
