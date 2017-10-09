@@ -39,13 +39,14 @@ class My_Plans extends \Spot\Entity
 
 
 
-// public static function relations(Mapper $mapper, Entity $entity) {
-//         return [
+public static function relations(Mapper $mapper, Entity $entity) {
+        return [
 
-//             // 'User' => $mapper->belongsTo($entity, 'App\User', 'user_id')
+            // 'User' => $mapper->hasOne($entity,'App\User','user_id')->where(['status'=>'accepted'])  
             
-//         ];
-    }    
+        ];
+    }  
+    }  
 
 
 

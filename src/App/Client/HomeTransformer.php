@@ -54,7 +54,7 @@ class HomeTransformer extends Fractal\TransformerAbstract
 
         $accepted = null;
         $accepted = $user->My_Plans;
-        $this->params['acceptedplans']=count($accepted);
+        $this->params['status']=count($accepted);
 
 
 
@@ -67,7 +67,7 @@ class HomeTransformer extends Fractal\TransformerAbstract
             "name" => (string) $user->user_name?: null,
             "companies" => (integer)$this->params['user_companies'] ? :0,
             "my_plans" => (integer)$this->params['my_plans'] ? :0,
-            "accepted" => (integer)$user->my_plans->status ? :0,
+            "accepted" => (integer)$this->params['status'] ? :0,
 
             // "total accepted" => (integer)$this->params['my_plans'] ? :0,
             // // "total plans" => (string)$this->params['plans'] ? :0,

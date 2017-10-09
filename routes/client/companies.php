@@ -62,31 +62,39 @@ $app->get("/company/{id}", function ($request, $response, $arguments) {
 $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
 
    $body = $request->getParsedBody();
+   $id=$arguments["id"];
    $companyrating['company_id'] =  $arguments["id"];
-   $companyrating['user_id'] = 2;
+   $companyrating['user_id'] = 4;
    $companyrating['rating'] = $body['rating'];
 
 
+   if ($check = $this->spot->mapper("App\Company_Rating")->first([
+      "company_id" =>$id,"user_id"=>4  
+    ]))
+ {
+   throw new NotFoundException("Already Rated!", 404);
+ }
+
+ else{
    $newresponse = new Company_Rating($companyrating);
-
-   if (false === $check = $this->spot->mapper("App\Company_Rating")->first([
-      "company_id" => $arguments["id"],
-      "user_id" => 1
-      ]))
-   {
-
-
    $mapper = $this->spot->mapper("App\Company_Rating");
-
    $id = $mapper->save($newresponse);
 
    if ($id) {
+
+
+   
+    $companies = $this->spot->mapper("App\Company")->query("UPDATE companies SET rating =
+      (SELECT AVG(rating)
+                     FROM company_rating
+                     WHERE company_rating.company_id = companies.company_id)"); 
 
    /* Serialize the response data. */
    $fractal = new Manager();
    $fractal->setSerializer(new DataArraySerializer);
 
    $entity = $mapper->where(["rating_id"=>$id]);
+
 
    $data["status"] = "ok";
    $data["id"] = $id;
@@ -108,8 +116,5 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 }
 }
-else  {
-      throw new NotFoundException("Already appreciated.", 404);
-      };
 
 });
