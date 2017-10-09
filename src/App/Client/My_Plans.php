@@ -35,17 +35,6 @@ class My_Plans extends \Spot\Entity
             "timestamp" => ["type" => "datetime"]
             ];
     }
-
-
-
-
-public static function relations(Mapper $mapper, Entity $entity) {
-        return [
-
-            // 'User' => $mapper->hasOne($entity,'App\User','user_id')->where(['status'=>'accepted'])  
-            
-        ];
-    }  
     }  
 
 

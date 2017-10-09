@@ -75,7 +75,7 @@ $app->get("/plan/{id}", function ($request, $response, $arguments)
 $app->get("/myplans", function ($request, $response, $arguments) 
 {
 
-  $id =2;
+  $id =3;
   $my_plans = $this->spot->mapper("App\My_Plans")
   ->query("SELECT my_plans.plan_id,plans.name,my_plans.status,companies.logo FROM my_plans,plans,companies WHERE my_plans.plan_id=plans.plan_id AND companies.company_id=plans.company_id AND my_plans.user_id=$id ");
 
@@ -286,7 +286,7 @@ else {
 $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments) {
 
  $body = [
-   "user_id" => 2,
+   "user_id" => 3,
    "plan_id" => $arguments["plan_id"],
    "status"=>'Waiting'
  ];
@@ -295,7 +295,7 @@ $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments)
 
  if (false === $check = $this->spot->mapper("App\My_Plans")->first([
    "plan_id" => $arguments["plan_id"],
-   "user_id" =>  2,
+   "user_id" =>  3,
 
  ])) 
  {
@@ -304,7 +304,7 @@ $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments)
   if ($id) {
 
    $data["status"] = "ok";
-   $data["message"] = " like ";
+   $data["message"] = " registered ";
 
    return $response->withStatus(201)
    ->withHeader("Content-Type", "application/json")

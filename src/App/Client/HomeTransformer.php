@@ -52,22 +52,18 @@ class HomeTransformer extends Fractal\TransformerAbstract
         $this->params['my_plans']=count($totalplans);
 
 
-        $accepted = null;
-        $accepted = $user->My_Plans;
-        $this->params['status']=count($accepted);
+        // $accepted = null;
+        // $accepted = $user->My_Plans;
+        // $this->params['status']=("App\My_Plans")->query("SELECT COUNT(plan_id)  FROM my_plans WHERE status='accepted'");$accepted;
 
 
-
-
-        // $averagerating=null;
-        // $averagerating=$
 
         return [
             "id" => (integer)$user->user_id ?: 0,
             "name" => (string) $user->user_name?: null,
             "companies" => (integer)$this->params['user_companies'] ? :0,
             "my_plans" => (integer)$this->params['my_plans'] ? :0,
-            "accepted" => (integer)$this->params['status'] ? :0,
+            "accepted" => (integer)$this->params['status']?:0
 
             // "total accepted" => (integer)$this->params['my_plans'] ? :0,
             // // "total plans" => (string)$this->params['plans'] ? :0,

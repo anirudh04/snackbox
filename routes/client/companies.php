@@ -64,12 +64,12 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
    $body = $request->getParsedBody();
    $id=$arguments["id"];
    $companyrating['company_id'] =  $arguments["id"];
-   $companyrating['user_id'] = 4;
+   $companyrating['user_id'] = 1;
    $companyrating['rating'] = $body['rating'];
 
 
    if ($check = $this->spot->mapper("App\Company_Rating")->first([
-      "company_id" =>$id,"user_id"=>4  
+      "company_id" =>$id,"user_id"=>1  
     ]))
  {
    throw new NotFoundException("Already Rated!", 404);
