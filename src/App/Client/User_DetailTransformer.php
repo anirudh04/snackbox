@@ -18,7 +18,7 @@ namespace App;
 use App\User;
 use League\Fractal;
 
-class UserDetailTransformer extends Fractal\TransformerAbstract
+class User_DetailTransformer extends Fractal\TransformerAbstract
 {
 
     public function transform(User $user)
@@ -26,13 +26,14 @@ class UserDetailTransformer extends Fractal\TransformerAbstract
         return [
             "id" => (integer)$user->user_id ?: null,
             "user_name" => (string)$user->user_name ?: null,
+            "college" => (string)$user->college ?: null,
             "email" => (string)$user->email ?: null,
             "phone" => (integer)$user->phone ?: 0,
             "gender" => (string)$user->gender ?: null,
             "address" => (string)$user->address ?: null,
             "cv" => (string)$user->cv ?: null,
-            "status" => (boolean)$user->status ?: null,
-            ]
+            "degree" => (string)$user->degree ?: null,
+            
         ];
     }
 }

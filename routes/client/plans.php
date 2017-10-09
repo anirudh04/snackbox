@@ -14,6 +14,7 @@ use App\Discussion_QuestionsTransformer;
 use App\User_CompaniesTransformer;
 use App\ReviewsTransformer;
 use App\PlanTransformer;
+use App\User_DetailTransformer;
 use App\My_Plans;
 use App\My_PlansTransformer;
 use App\SinglePlanTransformer;
@@ -103,6 +104,24 @@ $app->get("/home/{id}", function ($request, $response, $arguments)
   $fractal->setSerializer(new DataArraySerializer);
 
   $resource = new Collection($user, new HomeTransformer);
+  $data = $fractal->createData($resource)->toArray();
+
+  return $response->withStatus(200)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
+$app->get("/user/{id}", function ($request, $response, $arguments) 
+{
+
+  $id =$arguments["id"];
+  $user = $this->spot->mapper("App\User")->query("SELECT * FROM user WHERE user_id=$id");
+
+
+  $fractal = new Manager();
+  $fractal->setSerializer(new DataArraySerializer);
+
+  $resource = new Collection($user, new User_DetailTransformer);
   $data = $fractal->createData($resource)->toArray();
 
   return $response->withStatus(200)
@@ -382,6 +401,67 @@ else {
 }
 }
 });
+
+
+
+$app->post("/userdetail/{id}", function ($request, $response, $arguments) 
+{
+
+ $body = $request->getParsedBody();
+ $user['user_id'] =  $arguments["id"];
+ $user['user_name'] = $body['user_name'];
+ $user['college'] = $body['college'];
+ $user['gender'] = $body['gender'];
+ $user['email'] = $body['email'];
+ $user['phone'] = $body['phone'];
+ $user['address'] = $body['address'];
+ $user['degree'] = $body['degree'];
+ $user['cv'] = $body['cv'];
+
+ 
+ $newresponse = new User($user);
+ $mapper = $this->spot->mapper("App\User");
+ $id = $mapper->save($newresponse);
+
+ if ($id) {
+
+   /* Serialize the response data. */
+   $fractal = new Manager();
+   $fractal->setSerializer(new DataArraySerializer);
+
+   $entity = $mapper->where(["user_id"=>$id]);
+
+   $data["status"] = "ok";
+   $data["id"] = $id;
+   $data["message"] = "User details added";
+
+   $resource = new Collection($entity, new User_DetailTransformer());
+   $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+
+   return $response->withStatus(201)
+   ->withHeader("Content-Type", "application/json")
+   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+ } 
+ else {
+
+  $data["status"] = "error";
+  $data["message"] = "Error in inserting!";
+
+  return $response->withStatus(500)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+}
+});
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -29,15 +29,14 @@ class User extends \Spot\Entity
     return [
       "user_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "user_name" => ["type" => "string"], 
-      "college" => ["type" => "string"],
+      "college" => ["type" => "string"],   
       "gender" => ["type" => "string"],
       "email" => ["type" => "string"],
-      "type" => ["type" => "string"],
       "phone"=>["type"=>"integer"],
       "address" => ["type" => "string"],
       "cv" => ["type" => "string"],
-      "timestamp" => ["type" => "datetime"],
-      "status" => ["type" => "boolean"],
+      "degree" => ["type" => "string"]
+      
     ];
   }
 
