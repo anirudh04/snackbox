@@ -33,7 +33,7 @@ class User_DetailTransformer extends Fractal\TransformerAbstract
             "address" => (string)$user->address ?: null,
             "cv" => (string)$user->cv ?: null,
             "degree" => (string)$user->degree ?: null,
-            "status" => (string)$user->status ?: null,
+            "status" => (string)$user->status ?: null
             
         ];
     }

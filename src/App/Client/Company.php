@@ -46,7 +46,7 @@ class Company extends \Spot\Entity
     return [
       'Plans' => $mapper->hasMany($entity, 'App\Plan', 'company_id'),
       'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
-      'Rating' => $mapper->hasOne($entity, 'App\Company_Rating', 'company_id'),
+      'Rating' => $mapper->hasMany($entity, 'App\Company_Rating', 'company_id'),
       // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
     ];
   }

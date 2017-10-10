@@ -36,7 +36,7 @@ class User extends \Spot\Entity
       "address" => ["type" => "string"],
       "cv" => ["type" => "string"],
       "degree" => ["type" => "string"],
-      "status" => ["type" => "string"]
+      "status" => ["type" => "string"],
       
     ];
   }
