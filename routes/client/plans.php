@@ -117,23 +117,14 @@ $app->get("/user/{id}", function ($request, $response, $arguments)
   $id =$arguments["id"];
   $user = $this->spot->mapper("App\User")->query("SELECT * FROM user WHERE user_id=$id");
 
-<<<<<<< HEAD
-  $fractal = new Manager();
-  $fractal->setSerializer(new DataArraySerializer);
-  $resource = new Collection($user, new User_DetailTransformer);
-  $data = $fractal->createData($resource)->toArray();
-
-   return $response->withStatus(200)
-=======
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);
-
   $resource = new Collection($user, new User_DetailTransformer);
   $data = $fractal->createData($resource)->toArray();
 
   return $response->withStatus(200)
->>>>>>> master
+
   ->withHeader("Content-Type", "application/json")
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
@@ -369,6 +360,8 @@ else {
   throw new NotFoundException("Already Bookmarked!", 404);
 }
 });
+
+
 
  $app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
 {
