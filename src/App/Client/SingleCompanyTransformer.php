@@ -24,7 +24,7 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
     protected $defaultIncludes = [
 
         'plans',
-        'companies'
+        
     ];
 
     private $params = [];

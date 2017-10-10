@@ -129,6 +129,31 @@ $app->get("/user/{id}", function ($request, $response, $arguments)
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
+
+$app->get("/user_detail/{id}", function ($request, $response, $arguments) 
+{
+  if (false === $user = $this->spot->mapper("App\User")->first([
+    "user_id" => $arguments["id"]
+  ])) 
+  {
+    throw new NotFoundException(" user not found.", 404);
+  };
+
+  if ($this->cache->isNotModified($request, $response)) {
+    return $response->withStatus(304);
+  }
+
+
+  $fractal = new Manager();
+  $fractal->setSerializer(new DataArraySerializer);
+  $resource = new Item($user, new User_DetailTransformer);
+  $data = $fractal->createData($resource)->toArray();
+
+  return $response->withStatus(200)
+  ->withHeader("Content-Type", "application/json")
+  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
 $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
   $body = $request->getParsedBody();
 
