@@ -31,13 +31,19 @@ class My_Plans extends \Spot\Entity
             "plan_reg_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "plan_id" => ["type" => "integer", "unsigned" => true], 
             "user_id" => ["type" => "integer","unsigned"=>true],
-            "status" => ["type" => "string"],
-            "timestamp" => ["type" => "datetime"]
+            "status" => ["type" => "string"]
             ];
     }
-    }  
 
 
+  //    public static function relations(Mapper $mapper, Entity $entity) {
+  //   return [
+  //     'UserNotification' => $mapper->hasMany($entity, 'App\UserNotification', 'plan_reg_id')
+  //       ];
+
+  // }
+
+}
 
 
 

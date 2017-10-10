@@ -29,15 +29,14 @@ class User extends \Spot\Entity
     return [
       "user_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "user_name" => ["type" => "string"], 
-      "college" => ["type" => "string"],
+      "college" => ["type" => "string"],   
       "gender" => ["type" => "string"],
       "email" => ["type" => "string"],
-      "type" => ["type" => "string"],
       "phone"=>["type"=>"integer"],
       "address" => ["type" => "string"],
       "cv" => ["type" => "string"],
-      "timestamp" => ["type" => "datetime"],
-      "status" => ["type" => "boolean"],
+      "degree" => ["type" => "string"]
+      
     ];
   }
 
@@ -48,7 +47,8 @@ class User extends \Spot\Entity
       'Answer' => $mapper->hasMany($entity, 'App\Discussion_Answers', 'user_id'),
       'Company_Rating' => $mapper->hasMany($entity, 'App\Company_Rating', 'user_id'),
       'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'user_id'),
-      'My_Plans' => $mapper->hasMany($entity,'App\My_Plans','user_id')
+      // 'My_Plans' => $mapper->hasMany($entity,'App\My_Plans','user_id'),
+      'User_Notification' => $mapper->hasMany($entity,'App\UserNotification','user_id'),
       // 'Bank_Details' => $mapper->belongsTo($entity, 'App\Bank_Details', 'user_id')
            ];
 
