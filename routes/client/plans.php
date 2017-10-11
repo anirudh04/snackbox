@@ -8,6 +8,7 @@ use App\UserNotification;
 use App\User;
 use App\Bank_Details;
 use App\Bank_DetailsTransformer;
+use App\User_RegistrationNotification;
 use App\Discussion_Answers;
 use App\Discussion_Questions;
 use App\Discussion_AnswersTransformer;
@@ -480,6 +481,25 @@ $app->post("/userdetail", function ($request, $response, $arguments)
 
    $resource = new Collection($entity, new User_DetailTransformer());
    $data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+
+
+
+   $message1=" A new user has registered";
+
+   
+
+   $body = $request->getParsedBody();
+ $userregnotification['user_id'] =  4;
+ $userregnotification['user_reg_notification'] ="$message1";
+
+
+ $newresponse = new User_RegistrationNotification($userregnotification);
+ $mapper = $this->spot->mapper("App\User_RegistrationNotification");
+ $id = $mapper->save($newresponse);
+
+
+
+
 
    return $response->withStatus(201)
    ->withHeader("Content-Type", "application/json")
