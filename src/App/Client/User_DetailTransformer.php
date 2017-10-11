@@ -29,11 +29,13 @@ class User_DetailTransformer extends Fractal\TransformerAbstract
             "college" => (string)$user->college ?: null,
             "email" => (string)$user->email ?: null,
             "phone" => (integer)$user->phone ?: 0,
+            "google_id" => (string)$user->google_id ?: null,
             "gender" => (string)$user->gender ?: null,
             "address" => (string)$user->address ?: null,
             "cv" => (string)$user->cv ?: null,
             "degree" => (string)$user->degree ?: null,
             "status" => (string)$user->status ?: null
+            
             
         ];
     }

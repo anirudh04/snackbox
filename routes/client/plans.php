@@ -143,7 +143,6 @@ $app->get("/user_detail/{id}", function ($request, $response, $arguments)
     return $response->withStatus(304);
   }
 
-
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);
   $resource = new Item($user, new User_DetailTransformer);
@@ -447,13 +446,14 @@ else {
 
 
 
-$app->post("/userdetail/{id}", function ($request, $response, $arguments) 
+$app->post("/userdetail", function ($request, $response, $arguments) 
 {
 
  $body = $request->getParsedBody();
- $user['user_id'] =  $arguments["id"];
+ 
  $user['user_name'] = $body['user_name'];
  $user['college'] = $body['college'];
+ $user['google_id'] = $body['google_id'];
  $user['gender'] = $body['gender'];
  $user['email'] = $body['email'];
  $user['phone'] = $body['phone'];
@@ -495,6 +495,32 @@ $app->post("/userdetail/{id}", function ($request, $response, $arguments)
   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 }
 });
+
+
+
+
+
+$app->get("/userdetails/{id_1}/{id_2}", function ($request, $response, $arguments) 
+{
+if ($check = $this->spot->mapper("App\User")->first([
+   "google_id" => $arguments["id_1"],
+   "email" =>  $arguments["id_2"]
+ ]))
+
+{
+$data["name"] = "John";
+$data["age"] = 30;
+$data["place"] = "New York";
+
+
+ 
+ 
+   
+  
+   return $response->withStatus(200)->withHeader("Content-Type", "application/json")->write(json_encode($data, JSON_UNESCAPED_SLASHES| JSON_PRETTY_PRINT));
+}
+}
+);
 
 
 

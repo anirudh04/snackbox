@@ -32,11 +32,12 @@ class User extends \Spot\Entity
       "college" => ["type" => "string"],   
       "gender" => ["type" => "string"],
       "email" => ["type" => "string"],
+      "google_id" => ["type" => "string"],
       "phone"=>["type"=>"integer"],
       "address" => ["type" => "string"],
       "cv" => ["type" => "string"],
       "degree" => ["type" => "string"],
-      "status" => ["type" => "string"],
+      "status" => ["type" => "string"]
       
     ];
   }
