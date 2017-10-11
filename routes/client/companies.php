@@ -18,8 +18,17 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/companies", function ($request, $response, $arguments) {
-  $id=1;
-  $companies = $this->spot->mapper("App\Company")->query("SELECT companies.company_id,companies.logo,companies.rating,companies.name,companies.type FROM companies,user_companies WHERE user_companies.company_id=companies.company_id AND user_companies.user_id=1");
+
+    
+  $token = $request->getHeader('Authorization');
+  $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+  $JWT = $this->get('JwtAuthentication');
+  $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+
+  $id=$decoded_token->id;
+  $companies = $this->spot->mapper("App\Company")->query("SELECT companies.company_id,companies.logo,companies.rating,companies.name,companies.type FROM companies,user_companies WHERE user_companies.company_id=companies.company_id AND user_companies.user_id=$id");
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);
@@ -60,15 +69,22 @@ $app->get("/company/{id}", function ($request, $response, $arguments) {
 
 $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
 
+
+  $token = $request->getHeader('Authorization');
+  $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+  $JWT = $this->get('JwtAuthentication');
+  $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
    $body = $request->getParsedBody();
    $id=$arguments["id"];
    $companyrating['company_id'] =  $arguments["id"];
-   $companyrating['user_id'] = 1;
+   $companyrating['user_id'] = $decoded_token->id;
    $companyrating['rating'] = $body['rating'];
 
 
    if ($check = $this->spot->mapper("App\Company_Rating")->first([
-      "company_id" =>$id,"user_id"=>1  
+      "company_id" =>$id,"user_id"=>$decoded_token->id  
     ]))
  {
    throw new NotFoundException("Already Rated!", 404);

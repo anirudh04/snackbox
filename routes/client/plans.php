@@ -37,7 +37,15 @@ use League\Fractal\Serializer\DataArraySerializer;
 $app->get("/plans", function ($request, $response, $arguments) 
 {
 
-	$id =1;
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+
+	$id =$decoded_token->id;
 	$plans = $this->spot->mapper("App\Plan")
 	->query("SELECT plans.plan_id,plans.name,plans.price_of_product,plans.difficulty,companies.logo FROM plans,companies,user_companies WHERE user_companies.company_id=companies.company_id AND companies.company_id=plans.company_id AND user_companies.user_id=$id");
 
@@ -79,7 +87,13 @@ $app->get("/plan/{id}", function ($request, $response, $arguments)
 $app->get("/myplans", function ($request, $response, $arguments) 
 {
 
-	$id =3;
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+	$id =$decoded_token->id;
 	$my_plans = $this->spot->mapper("App\My_Plans")
 	->query("SELECT my_plans.plan_id,plans.name,my_plans.status,companies.logo FROM my_plans,plans,companies WHERE my_plans.plan_id=plans.plan_id AND companies.company_id=plans.company_id AND my_plans.user_id=$id ");
 
@@ -132,35 +146,40 @@ $app->get("/user/{id}", function ($request, $response, $arguments)
 });
 
 
-$app->get("/user_detail/{id}", function ($request, $response, $arguments) 
-{
-	if (false === $user = $this->spot->mapper("App\User")->first([
-		"user_id" => $arguments["id"]
-	])) 
-	{
-		throw new NotFoundException(" user not found.", 404);
-	};
+// $app->get("/user_detail/{id}", function ($request, $response, $arguments) 
+// {
+// 	if (false === $user = $this->spot->mapper("App\User")->first([
+// 		"user_id" => $arguments["id"]
+// 	])) 
+// 	{
+// 		throw new NotFoundException(" user not found.", 404);
+// 	};
 
-	if ($this->cache->isNotModified($request, $response)) {
-		return $response->withStatus(304);
-	}
+// 	if ($this->cache->isNotModified($request, $response)) {
+// 		return $response->withStatus(304);
+// 	}
 
-	$fractal = new Manager();
-	$fractal->setSerializer(new DataArraySerializer);
-	$resource = new Item($user, new User_DetailTransformer);
-	$data = $fractal->createData($resource)->toArray();
+// 	$fractal = new Manager();
+// 	$fractal->setSerializer(new DataArraySerializer);
+// 	$resource = new Item($user, new User_DetailTransformer);
+// 	$data = $fractal->createData($resource)->toArray();
 
-	return $response->withStatus(200)
-	->withHeader("Content-Type", "application/json")
-	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
+// 	return $response->withStatus(200)
+// 	->withHeader("Content-Type", "application/json")
+// 	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+// });
 
 $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
 	$body = $request->getParsedBody();
 
 
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
 	$planreview['plan_id'] =  $arguments["id"];
-	$planreview['user_id'] = 2;
+	$planreview['user_id'] = $decoded_token->id;
 	$planreview['name'] = $body['title'];
 	$planreview['message'] = $body['message'];
 
@@ -200,10 +219,14 @@ $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
 });
 
 $app->post("/discussPlanAnswer/{question_id}", function ($request, $response, $arguments) 
-{
+	{ 
+	  $token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
 
 	$body = $request->getParsedBody();
-	$discussquestion['user_id'] = 2;
+	$discussquestion['user_id'] = $$decoded_token->id;
 	$discussquestion['question_id'] =  $arguments["question_id"];
 	$discussquestion['answer'] = $body['answer'];
 
@@ -245,9 +268,15 @@ $app->post("/discussPlanAnswer/{question_id}", function ($request, $response, $a
 $app->post("/discussPlanQuestion/{id}", function ($request, $response, $arguments) 
 {
 
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+	
 	$body = $request->getParsedBody();
 	$discussquestion['plan_id'] =  $arguments["id"];
-	$discussquestion['user_id'] =2;
+	$discussquestion['user_id'] =$decoded_token->id;
 	$discussquestion['question'] = $body['question'];
 
 	$newresponse = new Discussion_Questions($discussquestion);
@@ -288,8 +317,16 @@ $app->post("/discussPlanQuestion/{id}", function ($request, $response, $argument
 
 $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 
+
+     
+	$token = $request->getHeader('authorization');
+	$token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
 	$body = [
-		"user_id" => 1,
+		"user_id" => $decoded_token->id,
 		"plan_id" => $arguments["plan_id"],
 	];
 
@@ -297,7 +334,7 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 
 	if (false === $check = $this->spot->mapper("App\Likes")->first([
 		"plan_id" => $arguments["plan_id"],
-		"user_id" =>  1
+		"user_id" =>  $decoded_token->id
 	])) 
 	{
 		$id = $this->spot->mapper("App\Likes")->save($like);
@@ -330,8 +367,15 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 
 $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments) {
 
+      
+   $token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
 	$body = [
-		"user_id" => 2,
+		"user_id" => $decoded_token->id,
 		"plan_id" => $arguments["plan_id"],
 		"status"=>'Waiting'
 	];
@@ -349,13 +393,13 @@ $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments)
 			$data["status"] = "ok";
 			$data["message"] = " registered ";
 
-			$user_id=4;
+			$user_id=$token->user_id;
 			$message1="User with user id ";
 			$message2=" has registered in plan with plan id ";
 			$plan_id=$arguments["plan_id"];
 
 			$body = $request->getParsedBody();
-			$usernotification['user_id'] =  2;
+			$usernotification['user_id'] =  $token->user_id;
 			$usernotification['plan_reg_id'] =$arguments["plan_id"];
 			$usernotification['un_notification'] = "$message1$user_id$message2$plan_id" ;
 
@@ -451,6 +495,12 @@ $app->post("/bank_detail/{id}", function ($request, $response, $arguments)
 $app->post("/userdetail", function ($request, $response, $arguments) 
 {
 
+
+    $token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
 	$body = $request->getParsedBody();
 
 	$user['user_name'] = $body['user_name'];
@@ -490,7 +540,7 @@ $app->post("/userdetail", function ($request, $response, $arguments)
 
 
 		$body = $request->getParsedBody();
-		$userregnotification['user_id'] =  4;
+		$userregnotification['user_id'] =  $token->user_id;
 		$userregnotification['user_reg_notification'] ="$message1";
 
 
@@ -521,11 +571,11 @@ $app->post("/login", function ($request, $response, $arguments){
 
 
 	$body = $request->getParsedBody();
-	$user = new User();
+
 
 
 	if ($check = $this->spot->mapper("App\User")
-		->first(["google_id" => $body['gid'],
+		->first(["google_id" => $body['google_id'],
 			"email" =>  $body['email']])){
 		$data["type"] = "login";
 	$now = new DateTime();
@@ -536,21 +586,68 @@ $app->post("/login", function ($request, $response, $arguments){
 		"iat" => $now->getTimeStamp(),
 		"exp" => $future->getTimeStamp(),
 		// "jti" => $jti,
-		"id" => $user->user_id,
+		"id" => $check->user_id,
 		
 	];
 	$secret = getenv("JWT_SECRET");
 	$token = JWT::encode($payload, $secret, "HS256");
-	$data["status"] = "ok";
+	
 	$data["registered"] = true;
 	$data["token"] = $token;
+	$data["status"] = $check->status;
+	$data["id"] = $check->user_id;
+
 
 	return $response->withStatus(201)
 	->withHeader("Content-Type", "application/json")
 	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
 }
+
+
+
+
+else
+{
+	$data["registered"] = false;
+	$data["token"] = "0";
+	$data["status"] = "rejected";
+	return $response->withStatus(201)
+	->withHeader("Content-Type", "application/json")
+	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+}
 });
+
+
+
+$app->get("/checkstatus", function ($request, $response, $arguments) 
+{
+
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+
+	$id =$decoded_token->id;
+	$user = $this->spot->mapper("App\User")
+	->query("SELECT status FROM user WHERE user_id=$id")->first();
+
+	$data["registered"] = true;
+	$data["token"] = $token;
+	$data["status"] = $user->status;
+
+
+	
+
+	return $response->withStatus(200)
+	->withHeader("Content-Type", "application/json")
+	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
+
 
 
 
