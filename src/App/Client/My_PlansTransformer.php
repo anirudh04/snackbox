@@ -30,6 +30,7 @@ class My_PlansTransformer extends Fractal\TransformerAbstract
             "status" => (string)$my_plans->status ?: null,
             "name" => (string)$my_plans->name ?: null
             
+            
         ];
     }
 }

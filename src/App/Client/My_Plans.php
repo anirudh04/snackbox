@@ -31,6 +31,7 @@ class My_Plans extends \Spot\Entity
             "plan_reg_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "plan_id" => ["type" => "integer", "unsigned" => true], 
             "user_id" => ["type" => "integer","unsigned"=>true],
+            "company_id" => ["type" => "integer","unsigned"=>true],
             "status" => ["type" => "string"]
             ];
     }

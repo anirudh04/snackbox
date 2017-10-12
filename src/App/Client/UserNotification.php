@@ -30,14 +30,16 @@ class UserNotification extends \Spot\Entity
       "un_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "un_notification" => ["type" => "string", "unsigned" => true], 
       "plan_reg_id" => ["type" => "integer"],
-      "user_id" => ["type" => "integer"]
+      "user_id" => ["type" => "integer"],
+      "company_id" => ["type" => "integer"],
        ];
   }
 
   public static function relations(Mapper $mapper, Entity $entity) {
     return [
       'User' => $mapper->belongsTo($entity, 'App\User', 'user_id'),
-      'My_Plans' => $mapper->belongsTo($entity, 'App\My_Plans', 'plan_reg_id')      
+      'My_Plans' => $mapper->belongsTo($entity, 'App\My_Plans', 'plan_reg_id'),    
+      'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),    
       // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
     ];
   }

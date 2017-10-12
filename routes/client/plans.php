@@ -109,11 +109,30 @@ $app->get("/myplans", function ($request, $response, $arguments)
 });
 
 
-$app->get("/home/{id}", function ($request, $response, $arguments) 
+$app->get("/home", function ($request, $response, $arguments) 
 {
 
-	$id =$arguments["id"];
-	$user = $this->spot->mapper("App\User")->query("SELECT user.user_id,user.user_name,COUNT(my_plans.plan_id) FROM user,my_plans WHERE user.user_id=my_plans.user_id AND user.user_id=$id AND my_plans.status='accepted'" );
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+	$id =$decoded_token->id;
+
+	$user = $this->spot->mapper("App\User")->query("SELECT user_id,user_name FROM user WHERE user_id=$id");
+
+	$accepted = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) AS abc FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted'");
+
+	// $my_plans = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND user.user_id=$id");
+
+	$amount = $this->spot->mapper("App\My_Plans")->query("SELECT SUM(my_plans.amount) AS cba FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted'");
+
+	// $accepted= (object)$accepted;
+	$accepted= $accepted[0]->abc;
+	$amount= $amount[0]->cba;
+	// $my_plans=$my_plans[0]->;
 
 
 	$fractal = new Manager();
@@ -122,15 +141,29 @@ $app->get("/home/{id}", function ($request, $response, $arguments)
 	$resource = new Collection($user, new HomeTransformer);
 	$data = $fractal->createData($resource)->toArray();
 
+	// $data->my_plans=$my_plans;
+	$data["data"][0]['accepted']=(int)$accepted;
+	$data["data"][0]['amount']=(int)$amount;
+	// $data->accepted="$accepted";
+	// $data[1]->amount=$amount;
+
 	return $response->withStatus(200)
 	->withHeader("Content-Type", "application/json")
 	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->get("/user/{id}", function ($request, $response, $arguments) 
+$app->get("/user", function ($request, $response, $arguments) 
 {
 
-	$id =$arguments["id"];
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+	$id =$decoded_token->id;
+
 	$user = $this->spot->mapper("App\User")->query("SELECT * FROM user WHERE user_id=$id");
 
 
@@ -219,8 +252,8 @@ $app->post("/reviewPlan/{id}", function ($request, $response, $arguments) {
 });
 
 $app->post("/discussPlanAnswer/{question_id}", function ($request, $response, $arguments) 
-	{ 
-	  $token = $request->getHeader('Authorization');
+{ 
+	$token = $request->getHeader('Authorization');
 	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
 	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
@@ -273,7 +306,7 @@ $app->post("/discussPlanQuestion/{id}", function ($request, $response, $argument
 	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
 	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
-	
+
 	$body = $request->getParsedBody();
 	$discussquestion['plan_id'] =  $arguments["id"];
 	$discussquestion['user_id'] =$decoded_token->id;
@@ -318,7 +351,7 @@ $app->post("/discussPlanQuestion/{id}", function ($request, $response, $argument
 $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 
 
-     
+
 	$token = $request->getHeader('authorization');
 	$token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
@@ -365,24 +398,24 @@ $app->post("/likePlan/{plan_id}", function ($request, $response, $arguments) {
 });
 
 
-$app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments) {
+$app->post("/registerPlan/{plan_id}/{company_id}", function ($request, $response, $arguments) {
 
-      
-   $token = $request->getHeader('Authorization');
+
+	$token = $request->getHeader('Authorization');
 	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
 	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
 
-
 	$body = [
 		"user_id" => $decoded_token->id,
 		"plan_id" => $arguments["plan_id"],
+		"company_id"=>$arguments["company_id"],
 		"status"=>'Waiting'
 	];
 
 	$my_plans = new My_Plans($body);
 
-	if (false === $check = $this->spot->mapper("App\My_Plans")->first(["plan_id" => $arguments["plan_id"],"user_id" =>  2])) 
+	if (false === $check = $this->spot->mapper("App\My_Plans")->first(["plan_id" => $arguments["plan_id"],"user_id" =>  $decoded_token->id])) 
 
 	{
 		$id = $this->spot->mapper("App\My_Plans")->save($my_plans);
@@ -399,9 +432,10 @@ $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments)
 			$plan_id=$arguments["plan_id"];
 
 			$body = $request->getParsedBody();
-			$usernotification['user_id'] =  $token->user_id;
+			$usernotification['user_id'] =  $decoded_token->id;
 			$usernotification['plan_reg_id'] =$arguments["plan_id"];
 			$usernotification['un_notification'] = "$message1$user_id$message2$plan_id" ;
+			$usernotification['company_id'] =$arguments["company_id"];
 
 
 
@@ -427,7 +461,7 @@ $app->post("/registerPlan/{plan_id}", function ($request, $response, $arguments)
 	}
 	else {
 
-		throw new NotFoundException("Already Bookmarked!", 404);
+		throw new NotFoundException("Already registered!", 200);
 	}
 });
 
@@ -496,10 +530,10 @@ $app->post("/userdetail", function ($request, $response, $arguments)
 {
 
 
-    $token = $request->getHeader('Authorization');
-	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
-	$JWT = $this->get('JwtAuthentication');
-	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+ //    $token = $request->getHeader('Authorization');
+	// $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	// $JWT = $this->get('JwtAuthentication');
+	// $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
 
 	$body = $request->getParsedBody();
 
@@ -619,16 +653,13 @@ else
 });
 
 
-
 $app->get("/checkstatus", function ($request, $response, $arguments) 
 {
-
 
 	$token = $request->getHeader('Authorization');
 	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
 	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
-
 
 
 	$id =$decoded_token->id;
@@ -639,8 +670,6 @@ $app->get("/checkstatus", function ($request, $response, $arguments)
 	$data["token"] = $token;
 	$data["status"] = $user->status;
 
-
-	
 
 	return $response->withStatus(200)
 	->withHeader("Content-Type", "application/json")

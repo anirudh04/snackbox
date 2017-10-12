@@ -23,17 +23,14 @@ class HomeTransformer extends Fractal\TransformerAbstract
 
     protected $defaultIncludes = [
 
-        'my_plans',
-        'user_companies'
+        // 'my_plans',
+        // 'user_companies'
     ];
 
     private $params = [];
     function __construct($params = []) 
     {
         $this->params = $params;
-        $this->params['user_companies']=0;
-        $this->params['my_plans']=0;
-        // $this->params['plans']=0;
         
     }
 
@@ -53,8 +50,13 @@ class HomeTransformer extends Fractal\TransformerAbstract
 
 
         // $accepted = null;
-        // $accepted = $user->My_Plans;
-        // $this->params['status']=("App\My_Plans")->query("SELECT COUNT(plan_id)  FROM my_plans WHERE status='accepted'");$accepted;
+        // $accepted = $user->My_Plans->query("SELECT status FROM my_plans WHERE my_plans.status='accepted'");
+        // $this->params['status']=count($accepted);
+
+        // $totalamount = null;
+        // $totalamount = $user->My_Plans->query("SELECT SUM(amount)  FROM my_plans WHERE my_plans.status='accepted'");
+        // $this->params['amount']=count($totalamount);
+
 
 
 
@@ -63,9 +65,10 @@ class HomeTransformer extends Fractal\TransformerAbstract
             "name" => (string) $user->user_name?: null,
             "companies" => (integer)$this->params['user_companies'] ? :0,
             "my_plans" => (integer)$this->params['my_plans'] ? :0,
-            "accepted" => (integer)$this->params['status']?:0
+            // "accepted" => (integer)$this->params['status']?:0,
+            // "amount" => (integer)$this->params['amount']?:0
 
-            // "total accepted" => (integer)$this->params['my_plans'] ? :0,
+            // // "total accepted" => (integer)$this->params['my_plans'] ? :0,
             // // "total plans" => (string)$this->params['plans'] ? :0,
             
         ];

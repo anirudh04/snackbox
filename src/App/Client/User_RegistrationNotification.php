@@ -30,6 +30,7 @@ class User_RegistrationNotification extends \Spot\Entity
       "ur_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "user_reg_notification" => ["type" => "string", "unsigned" => true],
       "user_id" => ["type" => "integer"]
+      
        ];
   }
 
