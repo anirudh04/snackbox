@@ -41,5 +41,9 @@ require __DIR__ . "/routes/token.php";
 require __DIR__ . "/routes/todos.php";
 require __DIR__ . "/routes/client/plans.php";
 require __DIR__ . "/routes/client/companies.php";
+require __DIR__ . "/routes/client/planActions.php";
+require __DIR__ . "/routes/client/home.php";
+require __DIR__ . "/routes/client/user.php";
+require __DIR__ . "/routes/client/authentication.php";
 
 $app->run();
