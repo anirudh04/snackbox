@@ -43,10 +43,10 @@ $app->get("/user", function ($request, $response, $arguments)
 	$token = $request->getHeader('Authorization');
 	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
-	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+	$token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
-	$id =$decoded_token->id;
+	$id =$token->id;
 
 	$user = $this->spot->mapper("App\User")->query("SELECT * FROM user WHERE user_id=$id");
 
@@ -62,11 +62,20 @@ $app->get("/user", function ($request, $response, $arguments)
 	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->post("/bank_detail/{id}", function ($request, $response, $arguments) 
+$app->post("/bank_detail", function ($request, $response, $arguments) 
 {
 
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+	$id =$token->id;
+
 	$body = $request->getParsedBody();
-	$bankdetails['user_id'] =  $arguments["id"];
+	$bankdetails['user_id'] =  $id;
 	$bankdetails['holder_name'] =$body['holder_name'];
 	$bankdetails['bank_name'] = $body['bank_name'];
 	$bankdetails['ifsc'] = $body['ifsc'];
@@ -75,10 +84,10 @@ $app->post("/bank_detail/{id}", function ($request, $response, $arguments)
 
 
 	if ($check = $this->spot->mapper("App\Bank_Details")->first([
-		"user_id" => $arguments["id"]
+		"user_id" => $id
 	]))
 	{
-		throw new NotFoundException("Already Bookmarked!", 404);
+		throw new NotFoundException("Already added!", 404);
 	}
 	else{
 
@@ -119,7 +128,7 @@ $app->post("/bank_detail/{id}", function ($request, $response, $arguments)
 	}
 });
 
-$app->post("/userdetail", function ($request, $response, $arguments) 
+$app->post("/signup", function ($request, $response, $arguments) 
 {
 
 
@@ -145,17 +154,26 @@ $app->post("/userdetail", function ($request, $response, $arguments)
 	$mapper = $this->spot->mapper("App\User");
 	$id = $mapper->save($newresponse);
 
+
 	if ($id) {
+		$check = $this->spot->mapper("App\User")
+		->first(["google_id" => $body['google_id'],
+			"email" =>  $body['email']]);
+
+		
+		$now = new DateTime();
+		$future = new DateTime("now +30 days");
+		$server = $request->getServerParams();
+	// $jti = Base62::encode(random_bytes(16));
 		$payload = [
 			"iat" => $now->getTimeStamp(),
 			"exp" => $future->getTimeStamp(),
 		// "jti" => $jti,
-			"id" => $id,
+			"id" => $check->user_id,
 
 		];
 		$secret = getenv("JWT_SECRET");
 		$token = JWT::encode($payload, $secret, "HS256");
-
 
 
 		/* Serialize the response data. */
@@ -165,24 +183,30 @@ $app->post("/userdetail", function ($request, $response, $arguments)
 		$entity = $mapper->where(["user_id"=>$id]);
 
 		$data["status"] = "ok";
-		$data["id"] = $id;
+		
+		$data["token"] = $token;
 		$data["message"] = "User details added";
 
 		$resource = new Collection($entity, new User_DetailTransformer());
-		$data["response"] = $fractal->createData($resource)->toArray()['data'][0];		
+		$data["response"] = $fractal->createData($resource)->toArray()['data'][0];
+
+
 		$message1=" A new user has registered";		
 		$body = $request->getParsedBody();
-		$userregnotification['user_id'] =  $token->user_id;
+		$userregnotification['user_id'] =  $check->user_id;
 		$userregnotification['user_reg_notification'] ="$message1";
 
 
 		$newresponse = new User_RegistrationNotification($userregnotification);
 		$mapper = $this->spot->mapper("App\User_RegistrationNotification");
-		$id = $mapper->save($newresponse);		return $response->withStatus(201)
+		$id = $mapper->save($newresponse);	
+		return $response->withStatus(201)
 		->withHeader("Content-Type", "application/json")
-		->write(json_encode($token, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-	} 
-	else {
+		->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+	}
+
+	else
+	{
 
 		$data["status"] = "error";
 		$data["message"] = "Error in inserting!";

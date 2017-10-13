@@ -48,7 +48,7 @@ $app->get("/home", function ($request, $response, $arguments)
 
 	$user = $this->spot->mapper("App\User")->query("SELECT user_id,user_name FROM user WHERE user_id=$id");
 
-	$accepted = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) AS abc FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted'");
+	$accepted = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) AS abc FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted' AND user.user_id=$id");
 
 	// $my_plans = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND user.user_id=$id");
 

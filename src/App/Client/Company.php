@@ -30,7 +30,7 @@ class Company extends \Spot\Entity
       "company_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "logo" => ["type" => "string", "unsigned" => true], 
       "about" => ["type" => "string"],
-      "rating" => ["type" => "decimal"],
+      "rating" => ["type" => "integer"],
       "type" => ["type" => "string"],
       "name" => ["type" => "string"],
       "enrolled" => ["type" => "integer"],

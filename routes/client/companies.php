@@ -11,6 +11,7 @@ use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
 use Response\PreconditionFailedResponse;
 use Response\PreconditionRequiredResponse;
+use Exception\NotFoundException;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
@@ -19,7 +20,7 @@ use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/companies", function ($request, $response, $arguments) {
 
-    
+
   $token = $request->getHeader('Authorization');
   $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
   $JWT = $this->get('JwtAuthentication');
@@ -71,26 +72,28 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
 
 
   $token = $request->getHeader('Authorization');
-  $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+  $token = substr($token[0], strpos($token[0], " ") + 1); 
   $JWT = $this->get('JwtAuthentication');
-  $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+  $token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
-   $body = $request->getParsedBody();
-   $id=$arguments["id"];
-   $companyrating['company_id'] =  $arguments["id"];
-   $companyrating['user_id'] = $decoded_token->id;
-   $companyrating['rating'] = $body['rating'];
+  $body = $request->getParsedBody();
+  $id_1=$arguments["id"];
+  $companyrating['company_id'] =  $arguments["id"];
+  $companyrating['user_id'] = $token->id;
+  $companyrating['rating'] = $body['rating'];
 
 
-   if ($check = $this->spot->mapper("App\Company_Rating")->first([
-      "company_id" =>$id,"user_id"=>$decoded_token->id  
-    ]))
- {
+  if ($check = $this->spot->mapper("App\Company_Rating")->first([
+    "company_id" =>$id_1,"user_id"=>$token->id  
+  ]))
+  {
    throw new NotFoundException("Already Rated!", 404);
  }
 
- else{
+ else
+ {
+
    $newresponse = new Company_Rating($companyrating);
    $mapper = $this->spot->mapper("App\Company_Rating");
    $id = $mapper->save($newresponse);
@@ -98,38 +101,36 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
    if ($id) {
 
 
-   
-    $companies = $this->spot->mapper("App\Company")->query("UPDATE companies SET rating =
-      (SELECT AVG(rating)
-                     FROM company_rating
-                     WHERE company_rating.company_id = companies.company_id)"); 
+    $rating=$this->spot->mapper("App\Company_Rating")->query("SELECT AVG(rating) FROM company_rating WHERE  company_id=$id_1");
 
-   /* Serialize the response data. */
-   $fractal = new Manager();
-   $fractal->setSerializer(new DataArraySerializer);
+    $companies = $this->spot->mapper("App\Company")->update($rating); 
 
-   $entity = $mapper->where(["rating_id"=>$id]);
+    /* Serialize the response data. */
+    $fractal = new Manager();
+    $fractal->setSerializer(new DataArraySerializer);
+
+    $entity = $mapper->where(["rating_id"=>$id]);
 
 
-   $data["status"] = "ok";
-   $data["id"] = $id;
-   $data["message"] = "Rated";
+    $data["status"] = "ok";
+    // $data["id"] = $id;+
+    $data["message"] = "Rated";
 
 
-   return $response->withStatus(201)
-   ->withHeader("Content-Type", "application/json")
-   ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
- } 
- else
- {
+    return $response->withStatus(201)
+    ->withHeader("Content-Type", "application/json")
+    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+  } 
+  else
+  {
 
-  $data["status"] = "error";
-  $data["message"] = "Error in inserting!";
+    $data["status"] = "error";
+    $data["message"] = "Error in inserting!";
 
-  return $response->withStatus(500)
-  ->withHeader("Content-Type", "application/json")
-  ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-}
+    return $response->withStatus(500)
+    ->withHeader("Content-Type", "application/json")
+    ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+  }
 }
 
 });
