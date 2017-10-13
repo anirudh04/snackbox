@@ -36,6 +36,7 @@ class SinglePlanTransformer extends Fractal\TransformerAbstract
             "about" => (string) $plan->about?: null,
             "training" => (string) $plan->training_kit ?: null,
             "difficulty" => (string)$plan->difficulty ?: null,
+            "company_id" => (integer)$plan->company_id ?: 0,
             "name" => (string)$plan->name ?: null,
             "price_per_product" => (integer)$plan->price_per_product ?: 0,
             "earn_per_conversion" => (string)$plan->earn_per_conversion ?: null,
