@@ -49,7 +49,7 @@ class SingleCompanyTransformer extends Fractal\TransformerAbstract
             "id" => (integer)$company->company_id ?: 0,
             "logo" => (string) $company->logo?: null,
             "total_plans" => (string)$this->params['plans'] ? :0,
-            "rating" => (integer)$company->rating ? :0,
+            "rating" => (float)$company->rating ? :0,
             "about" => (string) $company->about ?: null,
             "type" => (string)$company->type ?: null,
             "name" => (string)$company->name ?: null,

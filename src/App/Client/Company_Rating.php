@@ -30,7 +30,7 @@ class Company_Rating extends \Spot\Entity
             "rating_id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "user_id" => ["type" => "integer", "unsigned" => true], 
             "company_id" => ["type" => "integer", "unsigned" => true],
-            "rating" => ["type" => "decimal", "unsigned" => true],
+            "rating" => ["type" => "float", "unsigned" => true],
            
             ];
     }

@@ -84,9 +84,8 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
   $companyrating['rating'] = $body['rating'];
 
 
-  if ($check = $this->spot->mapper("App\Company_Rating")->first([
-    "company_id" =>$id_1,"user_id"=>$token->id  
-  ]))
+  if ($check = $this->spot->mapper("App\Company_Rating")->first(["company_id" =>$id_1,"user_id"=>$token->id  
+]))
   {
    throw new NotFoundException("Already Rated!", 404);
  }
@@ -98,12 +97,25 @@ $app->post("/ratecompany/{id}", function ($request, $response, $arguments) {
    $mapper = $this->spot->mapper("App\Company_Rating");
    $id = $mapper->save($newresponse);
 
+
+
    if ($id) {
 
 
-    $rating=$this->spot->mapper("App\Company_Rating")->query("SELECT AVG(rating) FROM company_rating WHERE  company_id=$id_1");
 
-    $companies = $this->spot->mapper("App\Company")->update($rating); 
+    $rate=$this->spot->mapper("App\Company_Rating")->query("SELECT AVG(rating) AS abc FROM company_rating WHERE company_id=$id_1");
+
+
+    $companies = $this->spot->mapper("App\Company")->first(["company_id" => $arguments["id"]]);
+    $companies->rating=$rate[0]->abc;
+
+    $this->spot->mapper("App\Company")->update($companies);
+   
+
+
+  
+
+
 
     /* Serialize the response data. */
     $fractal = new Manager();
