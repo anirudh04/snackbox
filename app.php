@@ -21,13 +21,15 @@ require __DIR__ . "/vendor/autoload.php";
 
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
+$abc = array();
 
-$app = new \Slim\App([
+$abc=[
     "settings" => [
         "displayErrorDetails" => true,
-        "addContentLengthHeader" => false,
+        "addContentLengthHeader" => false
     ]
-]);
+];
+$app = new \Slim\App($abc);
 
 require __DIR__ . "/config/dependencies.php";
 require __DIR__ . "/config/handlers.php";
