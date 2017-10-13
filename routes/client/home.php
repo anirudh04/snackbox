@@ -24,6 +24,8 @@ use App\My_PlansTransformer;
 use App\SinglePlanTransformer;
 use App\HomeTransformer;
 
+use Exception\NotFoundException;
+
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
 use Response\PreconditionFailedResponse;
@@ -39,12 +41,12 @@ $app->get("/home", function ($request, $response, $arguments)
 
 
 	$token = $request->getHeader('Authorization');
-	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$token = substr($token[0], strpos($token[0], " ") + 1); 
 	$JWT = $this->get('JwtAuthentication');
-	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+	$token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
-	$id =$decoded_token->id;
+	$id =$token->id;
 
 	$user = $this->spot->mapper("App\User")->query("SELECT user_id,user_name FROM user WHERE user_id=$id");
 
@@ -52,7 +54,7 @@ $app->get("/home", function ($request, $response, $arguments)
 
 	// $my_plans = $this->spot->mapper("App\My_Plans")->query("SELECT COUNT(my_plans.plan_id) FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND user.user_id=$id");
 
-	$amount = $this->spot->mapper("App\My_Plans")->query("SELECT SUM(my_plans.amount) AS cba FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted'");
+	$amount = $this->spot->mapper("App\My_Plans")->query("SELECT SUM(my_plans.amount) AS cba FROM user,my_plans WHERE  my_plans.user_id =user.user_id AND my_plans.status='accepted' AND user.user_id=$id");
 
 	// $accepted= (object)$accepted;
 	$accepted= $accepted[0]->abc;

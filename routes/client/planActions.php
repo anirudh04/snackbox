@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Plan;
@@ -23,6 +24,8 @@ use App\My_Plans;
 use App\My_PlansTransformer;
 use App\SinglePlanTransformer;
 use App\HomeTransformer;
+
+use Exception\NotFoundException;
 
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
