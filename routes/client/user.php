@@ -35,6 +35,28 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
+$app->get("/testId",function ($request, $response, $arguments) 
+{
+
+
+	$token = $request->getHeader('Authorization');
+	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+	$JWT = $this->get('JwtAuthentication');
+	$token = $JWT->decodeToken($JWT->fetchToken($request));
+
+
+	$id =$token->id;
+
+	$data = null;
+
+	$data["tets"] = $id;
+
+
+	return $response->withStatus(200)
+	->withHeader("Content-Type", "application/json")
+	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
 
 
 $app->get("/user", function ($request, $response, $arguments) 
@@ -159,7 +181,7 @@ $app->post("/signup", function ($request, $response, $arguments)
 	if ($id) {
 		$check = $this->spot->mapper("App\User")
 		->first(["google_id" => $body['google_id'],
-			"email" =>  $body['email']]);
+		        "email" =>  $body['email']]);
 
 		
 		$now = new DateTime();
