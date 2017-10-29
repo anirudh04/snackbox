@@ -171,6 +171,7 @@ $app->post("/signup", function ($request, $response, $arguments)
 	$user['address'] = $body['address'];
 	$user['degree'] = $body['degree'];
 	$user['cv'] = $body['cv'];
+	$user['status'] ="rejected"; 
 
 
 	$newresponse = new User($user);
