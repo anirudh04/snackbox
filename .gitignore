@@ -1,0 +1,6 @@
+.env
+vendor/
+.vagrant/
+.phplint-cache
+
+\.phpintel/
