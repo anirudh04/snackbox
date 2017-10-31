@@ -31,7 +31,9 @@ class Machine_Order_Items extends \Spot\Entity
             "order_id" => ["type" => "string","unsigned"=>true],
             "name" => ["type" => "string","unsigned"=>true],
             "price" => ["type" => "float"],
-            "quantity" => ["type" => "integer"]            ];
+            "quantity" => ["type" => "integer"],
+            "timestamp" => ["type" => "timestamp"]
+        ];
     }
 
     public static function relations(Mapper $mapper, Entity $entity) {

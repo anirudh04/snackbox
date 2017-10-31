@@ -25,7 +25,9 @@ class Machine_Orders extends \Spot\Entity
       "user_phone" => ["type" => "integer"],
       "t_msg" => ["type" => "string"],
       "reciever_vpa" => ["type" => "string"],
-      "details" => ["type" => "string"]
+      "details" => ["type" => "string"],
+      "status" => ["type" => "string"],
+      "timestamp" => ["type" => "timestamp"]
     ];
   }
 

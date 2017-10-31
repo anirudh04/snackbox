@@ -31,7 +31,8 @@ class Business_Admin extends \Spot\Entity
       "admin_name" => ["type" => "string"], 
       "phone_no" => ["type" => "integer"],   
       "admin_email" => ["type" => "string"],
-      "password" => ["type" => "string"]
+      "password" => ["type" => "string"],
+      "timestamp" => ["type" => "timestamp"]
     ];
   }
 
