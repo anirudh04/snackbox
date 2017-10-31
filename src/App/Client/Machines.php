@@ -45,10 +45,10 @@ class Machines extends \Spot\Entity
 
   public static function relations(Mapper $mapper, Entity $entity) {
     return [
-      'Machine_Items' => $mapper->hasMany($entity, 'App\Machine_Items', 'id'),
-      'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
-      'Rating' => $mapper->hasMany($entity, 'App\Company_Rating', 'company_id'),
-      'UserNotification' => $mapper->hasMany($entity,'App\UserNotification', 'company_id'),
+      'Machine_Items' => $mapper->hasMany($entity, 'App\Machine_Items', 'id')
+      // 'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
+      // 'Rating' => $mapper->hasMany($entity, 'App\Company_Rating', 'company_id'),
+      // 'UserNotification' => $mapper->hasMany($entity,'App\UserNotification', 'company_id'),
 
       // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
     ];

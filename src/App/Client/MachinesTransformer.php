@@ -22,36 +22,16 @@ class MachinesTransformer extends Fractal\TransformerAbstract
 { 
 
 
-     private $params = [];
-    function __construct($params = []) 
-    {
-        $this->params = $params;
-        $this->params['left_units'] = 0;
-        $this->params['rating']=0;
-        $this->params['plans']=0;
-        
-    }
 
-    public function transform(Machines $machines)
-    {
+public function transform(Machines $machines)
+{
 
-
-        $appreciates = null;
-        $appreciates = $machines->left_units;
-        $this->params['left_units'] =  count($appreciates);
-
-        $number = null;
-        $number = $machines->Plans;
-        $this->params['plans']=count($number);
-
-        return [
-            "id" => (integer)$machines->id ?: 0,
-            "area_city" => (string)$machines->area_city ?: null,
-            "area" => $machines->area ?: null,
-            "name" => (string)$machines->name ?: null,
-            "left_units" => (integer) $this->params['left_units'] ?: 0,
-            
-            
-        ];
-    }
+    return [
+        "id" => (integer)$machines->id ?: 0,
+        "area_city" => (string)$machines->area_city ?: null,
+        "area" => (string)$machines->area ?: null,
+        "left_units" => (integer) $machines->left_units ?: 0,
+        "tot_units" => (integer) $machines->tot_units ?: 0
+    ];
+}
 }

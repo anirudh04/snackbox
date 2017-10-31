@@ -43,7 +43,7 @@ class Machine_Items extends \Spot\Entity
 
      public static function relations(Mapper $mapper, Entity $entity) {
     return [
-      'Machine' => $mapper->belongs($entity, 'App\Machine', 'id')
+      'Machine' => $mapper->belongsTo($entity, 'App\Machine', 'id')
         ];
 
   }
