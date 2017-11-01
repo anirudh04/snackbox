@@ -51,7 +51,7 @@ $app->get("/machines", function ($request, $response, $arguments) {
 
 
   // $id=$decoded_token->id;
-  $machine = $this->spot->mapper("App\Machines")->query("SELECT area_city,area,tot_units,left_units FROM machines WHERE login_admin_name='Anirudh' ");
+  $machine = $this->spot->mapper("App\Machines")->query("SELECT id,area_city,city,tot_units,left_units FROM machines WHERE local_admin_name='Anirudh'");
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);

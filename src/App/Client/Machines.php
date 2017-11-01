@@ -27,7 +27,7 @@ class Machines extends \Spot\Entity
   public static function fields()
   {
     return [
-      "id" => ["type" => "string", "unsigned" => true, "primary" => true, "autoincrement" => true], 
+      "id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" =>true], 
       "address" => ["type" => "string"],
       "local_admin_name" => ["type" => "string"],
       "local_admin_phone" => ["type" => "integer"],
@@ -40,7 +40,7 @@ class Machines extends \Spot\Entity
       "area_city" => ["type" => "string"],
       "city" => ["type" => "string"],
       "pincode" => ["type" => "integer"]
-        ];
+    ];
   }
 
   public static function relations(Mapper $mapper, Entity $entity) {

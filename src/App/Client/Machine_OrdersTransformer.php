@@ -15,23 +15,23 @@
 
 namespace App;
 
-use App\Machine_Items;
+use App\Machine_Orders;
 use League\Fractal;
 
-class Machine_ItemsTransformer extends Fractal\TransformerAbstract
+class Machine_OrdersTransformer extends Fractal\TransformerAbstract
 {
 
-    public function transform(Machine_Items $machine_items)
+    public function transform(Machine_Orders $machine_orders)
     {
 
 
         return [
-            "id" => (integer)$machine_items->id ?: 0,
-            "name" => (string)$machine_items->name ?: null,
-            "row_tag" => (string)$machine_items->row_tag ?: null,
-            "price" => (integer)$machine_items->price ?: 0,
-            "left_units" => (integer)$machine_items->left_units ?: 0,
-            "tot_units" => (integer)$machine_items->tot_units ?: 0
+            "id" => (integer)$machine_orders->id ?: 0,
+            "name" => (string)$machine_orders->name ?: null,
+            "row_tag" => (string)$machine_orders->row_tag ?: null,
+            "price" => (integer)$machine_orders->price ?: 0,
+            "left_units" => (integer)$machine_orders->left_units ?: 0,
+            "tot_units" => (integer)$machine_orders->tot_units ?: 0
         ];
     }
 }
