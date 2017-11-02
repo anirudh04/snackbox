@@ -1,20 +1,6 @@
 <?php
 
-/*
- * This file is part of the Slim API skeleton package
- *
- * Copyright (c) 2016-2017 Mika Tuupola
- *
- * Licensed under the MIT license:
- *   http://www.opensource.org/licenses/mit-license.php
- *
- * Project home:
- *   https://github.com/tuupola/slim-api-skeleton
- *
- */
-
 namespace App;
-
 use Spot\EntityInterface as Entity;
 use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
@@ -46,11 +32,6 @@ class Machines extends \Spot\Entity
   public static function relations(Mapper $mapper, Entity $entity) {
     return [
       'Machine_Items' => $mapper->hasMany($entity, 'App\Machine_Items', 'id')
-      // 'User_Companies' => $mapper->hasMany($entity, 'App\User_Companies', 'company_id'),
-      // 'Rating' => $mapper->hasMany($entity, 'App\Company_Rating', 'company_id'),
-      // 'UserNotification' => $mapper->hasMany($entity,'App\UserNotification', 'company_id'),
-
-      // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'company_id')
     ];
   }
 }

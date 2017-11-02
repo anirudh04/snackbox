@@ -1,17 +1,6 @@
 <?php
 
-/*
- * This file is part of the Slim API skeleton package
- *
- * Copyright (c) 2016-2017 Mika Tuupola
- *
- * Licensed under the MIT license:
- *   http://www.opensource.org/licenses/mit-license.php
- *
- * Project home:
- *   https://github.com/tuupola/slim-api-skeleton
- *
- */
+
 
 date_default_timezone_set("UTC");
 // error_reporting(E_ALL);
@@ -45,6 +34,7 @@ require __DIR__ . "/routes/client/plans.php";
 require __DIR__ . "/routes/client/machines.php";
 require __DIR__ . "/routes/client/planActions.php";
 require __DIR__ . "/routes/client/home.php";
+require __DIR__ . "/routes/client/orders.php";
 require __DIR__ . "/routes/client/user.php";
 require __DIR__ . "/routes/client/authentication.php";
 

@@ -91,10 +91,10 @@ CREATE TABLE `machine_items` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `machine_orders`
+-- Table structure for table `orders`
 --
 
-CREATE TABLE `machine_orders` (
+CREATE TABLE `orders` (
   `t_id` varchar(12) NOT NULL,
   `mc_id` varchar(8) NOT NULL,
   `price` int(5) NOT NULL,
@@ -152,9 +152,9 @@ ALTER TABLE `machine_items`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `machine_orders`
+-- Indexes for table `orders`
 --
-ALTER TABLE `machine_orders`
+ALTER TABLE `orders`
   ADD PRIMARY KEY (`t_id`);
 
 --

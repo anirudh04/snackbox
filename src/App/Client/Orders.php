@@ -7,14 +7,14 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Machine_Orders extends \Spot\Entity
+class Orders extends \Spot\Entity
 {
-  protected static $table = "machine_orders";
+  protected static $table = "orders";
 
   public static function fields()
   {
     return [
-      "t_id" => ["type" => "string", "unsigned" => true, "primary" => true, "autoincrement" => true],
+      "order_id" => ["type" => "string", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "mc_id" => ["type" => "string", "unsigned" => true], 
       "price" => ["type" => "integer"],
       "items" => ["type" => "integer"],
@@ -33,12 +33,8 @@ class Machine_Orders extends \Spot\Entity
 
   public static function relations(Mapper $mapper, Entity $entity) {
     return [
+      // 'Order_Items' => $mapper->hasMany($entity, 'App\Order_Items', 'id')
 
-      'Likes' => $mapper->hasMany($entity, 'App\Likes', 'plan_id'),
-      'Company' => $mapper->belongsTo($entity, 'App\Company', 'company_id'),
-      'Reviews' => $mapper->hasMany($entity, 'App\Reviews', 'plan_id'),
-      'Discussion' => $mapper->hasMany($entity, 'App\Discussion_Questions', 'plan_id')
-      // 'My_Plans' => $mapper->hasMany($entity, 'App\My_Plans', 'plan_id'),
     ];
   }
 }
