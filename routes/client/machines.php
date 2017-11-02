@@ -45,17 +45,17 @@ $app->get("/machine/{id}", function ($request, $response, $arguments) {
 $app->get("/machines", function ($request, $response, $arguments) {
 
 
-  // $token = $request->getHeader('Authorization');
-  // $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
-  // $JWT = $this->get('JwtAuthentication');
-  // $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
+  $token = $request->getHeader('Authorization');
+  $decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
+  $JWT = $this->get('JwtAuthentication');
+  $decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
 
-  // $id=$decoded_token->id;
+  $id=$decoded_token->id;
   $machine = $this->spot->mapper("App\Machines")
    ->all()
-        ->where(["local_admin_name" => "Anirudh"]);
+        ->where(["admin_id" => $id]);
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);

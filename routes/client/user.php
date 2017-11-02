@@ -1,9 +1,8 @@
 <?php
 
-use App\Plan;
-use App\Company;
-use App\Reviews;
-use App\Likes;
+
+use App\Business_Admin;
+use App\Business_AdminTransformer;
 use Tuupola\Base62;
 use Firebase\JWT\JWT;
 use App\UserNotification;
@@ -22,7 +21,7 @@ use League\Fractal\Serializer\DataArraySerializer;
 
 
 
-$app->get("/user", function ($request, $response, $arguments) 
+$app->get("/profile", function ($request, $response, $arguments) 
 {
 
 
@@ -32,14 +31,15 @@ $app->get("/user", function ($request, $response, $arguments)
 	$token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
-	$id =$token->id;
+	$email =$token->email;
 
-	$user = $this->spot->mapper("App\User")->query("SELECT * FROM user WHERE user_id=$id");
+	$admin = $this->spot->mapper("App\Business_Admin")->all()
+        ->where(["email" => $email]);
 
 
 	$fractal = new Manager();
 	$fractal->setSerializer(new DataArraySerializer);
-	$resource = new Collection($user, new User_DetailTransformer);
+	$resource = new Collection($admin, new Business_AdminTransformer);
 	$data = $fractal->createData($resource)->toArray();
 
 	return $response->withStatus(200)

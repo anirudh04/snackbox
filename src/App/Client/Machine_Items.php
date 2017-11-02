@@ -12,7 +12,7 @@ use Psr\Log\LogLevel;
 
 class Machine_Items extends \Spot\Entity
 {
-    protected static $table = "Machine_items";
+    protected static $table = "machine_items";
 
     public static function fields()
     {

@@ -25,7 +25,8 @@ class Machines extends \Spot\Entity
       "location" => ["type" => "string"],
       "area_city" => ["type" => "string"],
       "city" => ["type" => "string"],
-      "pincode" => ["type" => "integer"]
+      "pincode" => ["type" => "integer"],
+      "admin_id" => ["type" => "string"]
     ];
   }
 

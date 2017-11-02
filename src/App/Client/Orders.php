@@ -27,7 +27,7 @@ class Orders extends \Spot\Entity
       "reciever_vpa" => ["type" => "string"],
       "details" => ["type" => "string"],
       "status" => ["type" => "string"],
-      "timestamp" => ["type" => "timestamp"]
+      "time" => ["type" => "datetime"]
     ];
   }
 

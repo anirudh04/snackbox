@@ -12,15 +12,12 @@ class OrdersTransformer extends Fractal\TransformerAbstract
 
     public function transform(Orders $orders)
     {
-
-
         return [
-            "id" => (integer)$orders->id ?: 0,
-            "name" => (string)$orders->name ?: null,
-            "row_tag" => (string)$orders->row_tag ?: null,
-            "price" => (integer)$orders->price ?: 0,
-            "left_units" => (integer)$orders->left_units ?: 0,
-            "tot_units" => (integer)$orders->tot_units ?: 0
+            "id" => $orders->order_id ?: 0,
+            "price" => $orders->price ?: 0,
+            "time" => $orders->time ?: 0,
+            "quantity" => $orders->items ?: 0,
+            "status" => "Paid"
         ];
     }
 }
