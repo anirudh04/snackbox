@@ -6,22 +6,6 @@ use App\Reviews;
 use App\Likes;
 use Tuupola\Base62;
 use Firebase\JWT\JWT;
-use App\UserNotification;
-use App\User;
-use App\Bank_Details;
-use App\Bank_DetailsTransformer;
-use App\User_RegistrationNotification;
-use App\Discussion_Answers;
-use App\Discussion_Questions;
-use App\Discussion_AnswersTransformer;
-use App\Discussion_QuestionsTransformer;
-use App\User_CompaniesTransformer;
-use App\ReviewsTransformer;
-use App\PlanTransformer;
-use App\User_DetailTransformer;
-use App\My_Plans;
-use App\My_PlansTransformer;
-use App\SinglePlanTransformer;
 use App\HomeTransformer;
 
 use Exception\NotFoundException;
@@ -46,7 +30,7 @@ $app->get("/home", function ($request, $response, $arguments)
 	$token = $JWT->decodeToken($JWT->fetchToken($request));
 
 
-	$id =$token->id;
+	$id =112;
 
 	$user = $this->spot->mapper("App\User")->query("SELECT user_id,user_name FROM user WHERE user_id=$id");
 

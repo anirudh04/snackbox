@@ -8,21 +8,6 @@ use Tuupola\Base62;
 use Firebase\JWT\JWT;
 use App\UserNotification;
 use App\User;
-use App\Bank_Details;
-use App\Bank_DetailsTransformer;
-use App\User_RegistrationNotification;
-use App\Discussion_Answers;
-use App\Discussion_Questions;
-use App\Discussion_AnswersTransformer;
-use App\Discussion_QuestionsTransformer;
-use App\User_CompaniesTransformer;
-use App\ReviewsTransformer;
-use App\PlanTransformer;
-use App\User_DetailTransformer;
-use App\My_Plans;
-use App\My_PlansTransformer;
-use App\SinglePlanTransformer;
-use App\HomeTransformer;
 use Exception\NotFoundException;
 
 use Response\NotFoundResponse;
@@ -34,28 +19,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
-
-$app->get("/testId",function ($request, $response, $arguments) 
-{
-
-
-	$token = $request->getHeader('Authorization');
-	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
-	$JWT = $this->get('JwtAuthentication');
-	$token = $JWT->decodeToken($JWT->fetchToken($request));
-
-
-	$id =$token->id;
-
-	$data = null;
-
-	$data["tets"] = $id;
-
-
-	return $response->withStatus(200)
-	->withHeader("Content-Type", "application/json")
-	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
 
 
 
@@ -83,72 +46,6 @@ $app->get("/user", function ($request, $response, $arguments)
 
 	->withHeader("Content-Type", "application/json")
 	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
-
-$app->post("/bank_detail", function ($request, $response, $arguments) 
-{
-
-
-	$token = $request->getHeader('Authorization');
-	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
-	$JWT = $this->get('JwtAuthentication');
-	$token = $JWT->decodeToken($JWT->fetchToken($request));
-
-
-	$id =$token->id;
-
-	$body = $request->getParsedBody();
-	$bankdetails['user_id'] =  $id;
-	$bankdetails['holder_name'] =$body['holder_name'];
-	$bankdetails['bank_name'] = $body['bank_name'];
-	$bankdetails['ifsc'] = $body['ifsc'];
-	$bankdetails['account_number'] = $body['account_number'];
-	$bankdetails['pan_number'] = $body['pan_number'];
-
-
-	if ($check = $this->spot->mapper("App\Bank_Details")->first([
-		"user_id" => $id
-	]))
-	{
-		throw new NotFoundException("Already added!", 404);
-	}
-	else{
-
-
-		$newresponse = new Bank_Details($bankdetails);
-		$mapper = $this->spot->mapper("App\Bank_Details");
-		$id = $mapper->save($newresponse);
-
-		if ($id) {
-
-			/* Serialize the response data. */
-			$fractal = new Manager();
-			$fractal->setSerializer(new DataArraySerializer);
-
-			$entity = $mapper->where(["bank_id"=>$id]);
-
-			$data["status"] = "ok";
-			$data["id"] = $id;
-			$data["message"] = "bank details added";
-
-			$resource = new Collection($entity, new Bank_DetailsTransformer());
-			$data["response"] = $fractal->createData($resource)->toArray()['data'][0];
-
-			return $response->withStatus(201)
-			->withHeader("Content-Type", "application/json")
-			->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-		} 
-		else
-		{
-
-			$data["status"] = "error";
-			$data["message"] = "Error in inserting!";
-
-			return $response->withStatus(500)
-			->withHeader("Content-Type", "application/json")
-			->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-		}
-	}
 });
 
 $app->post("/signup", function ($request, $response, $arguments) 
@@ -239,27 +136,4 @@ $app->post("/signup", function ($request, $response, $arguments)
 		->withHeader("Content-Type", "application/json")
 		->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 	}
-});
-
-$app->get("/checkstatus", function ($request, $response, $arguments) 
-{
-
-	$token = $request->getHeader('Authorization');
-	$decoded_token = substr($token[0], strpos($token[0], " ") + 1); 
-	$JWT = $this->get('JwtAuthentication');
-	$decoded_token = $JWT->decodeToken($JWT->fetchToken($request));
-
-
-	$id =$decoded_token->id;
-	$user = $this->spot->mapper("App\User")
-	->query("SELECT status FROM user WHERE user_id=$id")->first();
-
-	$data["registered"] = true;
-	$data["token"] = $token;
-	$data["status"] = $user->status;
-
-
-	return $response->withStatus(200)
-	->withHeader("Content-Type", "application/json")
-	->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });

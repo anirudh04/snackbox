@@ -17,7 +17,7 @@ public function transform(Machines $machines)
 
     return [
         "id" => (integer)$machines->id ?: 0,
-        "area_city" => (string)$machines->area_city ?: null,
+        "area" => (string)$machines->area_city ?: null,
         "city" => (string)$machines->city ?: null,
         "left_units" => (integer) $machines->left_units ?: 0,
         "tot_units" => (integer) $machines->tot_units ?: 0

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.3
+-- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Oct 31, 2017 at 09:52 PM
--- Server version: 10.0.31-MariaDB-cll-lve
--- PHP Version: 5.6.30
+-- Host: 127.0.0.1
+-- Generation Time: Nov 02, 2017 at 12:53 PM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bookfoxi_upi`
+-- Database: `upi`
 --
 
 -- --------------------------------------------------------
@@ -55,7 +55,6 @@ CREATE TABLE `items_all` (
 --
 
 CREATE TABLE `machines` (
-  `id` varchar(8) NOT NULL,
   `address` text NOT NULL,
   `local_admin_name` text NOT NULL,
   `local_admin_phone` int(11) NOT NULL,
@@ -67,8 +66,18 @@ CREATE TABLE `machines` (
   `location` text,
   `area_city` text,
   `city` text,
-  `pincode` int(7) DEFAULT NULL
+  `pincode` int(7) DEFAULT NULL,
+  `tot_units` int(5) NOT NULL,
+  `left_units` int(5) NOT NULL,
+  `id` int(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `machines`
+--
+
+INSERT INTO `machines` (`address`, `local_admin_name`, `local_admin_phone`, `upi_vpa`, `latitude`, `longitude`, `wifi_id`, `wifi_pass`, `location`, `area_city`, `city`, `pincode`, `tot_units`, `left_units`, `id`) VALUES
+('sfwf', 'Anirudh', 33, 'ad', 3, 3, 'r3', '3r33', 'r3', 'wr', 'wdw', 11, 11, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -88,6 +97,13 @@ CREATE TABLE `machine_items` (
   `row_total_columns` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `machine_items`
+--
+
+INSERT INTO `machine_items` (`id`, `pos`, `mc_id`, `name`, `price`, `tot_units`, `left_units`, `row_tag`, `row_total_columns`) VALUES
+(1, 'A1', '112', 'Lays-Blue', 20, 8, 3, 'A1', 5);
+
 -- --------------------------------------------------------
 
 --
@@ -95,7 +111,7 @@ CREATE TABLE `machine_items` (
 --
 
 CREATE TABLE `orders` (
-  `t_id` varchar(12) NOT NULL,
+  `order_id` varchar(12) NOT NULL,
   `mc_id` varchar(8) NOT NULL,
   `price` int(5) NOT NULL,
   `items` int(3) NOT NULL,
@@ -109,19 +125,33 @@ CREATE TABLE `orders` (
   `details` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `mc_id`, `price`, `items`, `trupay_txn_id`, `bank_txn_id`, `user_vpa`, `user_name`, `user_phone`, `t_msg`, `reciever_vpa`, `details`) VALUES
+('1', '112', 100, 1, 'haskudh', 'hdsahdkash', 'njksdnfjds', 'abcd', 88888, 'dsalkdhild', 'dkjfklsdnfl', 'njlbndsflnsdf');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `machine_order_items`
+-- Table structure for table `order_items`
 --
 
-CREATE TABLE `machine_order_items` (
+CREATE TABLE `order_items` (
   `id` int(255) NOT NULL,
   `order_id` varchar(255) NOT NULL,
   `name` text NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `quantity` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `name`, `price`, `quantity`) VALUES
+(1, '1', 'snf', '122.22', 11);
 
 --
 -- Indexes for dumped tables
@@ -155,12 +185,12 @@ ALTER TABLE `machine_items`
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`t_id`);
+  ADD PRIMARY KEY (`order_id`);
 
 --
--- Indexes for table `machine_order_items`
+-- Indexes for table `order_items`
 --
-ALTER TABLE `machine_order_items`
+ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -178,15 +208,20 @@ ALTER TABLE `business_admin`
 ALTER TABLE `items_all`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `machines`
+--
+ALTER TABLE `machines`
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `machine_items`
 --
 ALTER TABLE `machine_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `machine_order_items`
+-- AUTO_INCREMENT for table `order_items`
 --
-ALTER TABLE `machine_order_items`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;COMMIT;
+ALTER TABLE `order_items`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
