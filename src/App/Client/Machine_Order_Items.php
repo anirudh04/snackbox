@@ -9,9 +9,9 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Order_Items extends \Spot\Entity
+class Machine_Order_Items extends \Spot\Entity
 {
-    protected static $table = "order_items";
+    protected static $table = "machine_order_items";
 
     public static function fields()
     {
@@ -21,7 +21,7 @@ class Order_Items extends \Spot\Entity
             "name" => ["type" => "string","unsigned"=>true],
             "price" => ["type" => "float"],
             "quantity" => ["type" => "integer"],
-            "timestamp" => ["type" => "timestamp"]
+            // "timestamp" => ["type" => "timestamp"]
         ];
     }
 

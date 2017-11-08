@@ -7,15 +7,16 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Orders extends \Spot\Entity
+class Machine_Orders extends \Spot\Entity
 {
-  protected static $table = "orders";
+  protected static $table = "machine_orders";
 
   public static function fields()
   {
     return [
-      "order_id" => ["type" => "string", "unsigned" => true, "primary" => true, "autoincrement" => true],
+      "t_id" => ["type" => "string", "unsigned" => true, "primary" => true, "autoincrement" => true],
       "mc_id" => ["type" => "string", "unsigned" => true], 
+      "t_status" => ["type" => "string"],
       "price" => ["type" => "integer"],
       "items" => ["type" => "integer"],
       "trupay_txn_id" => ["type" => "string"],
@@ -23,11 +24,11 @@ class Orders extends \Spot\Entity
       "user_vpa" => ["type" => "string"],
       "user_name" => ["type" => "string"],
       "user_phone" => ["type" => "integer"],
+      "user_email" => ["type" => "string"],
       "t_msg" => ["type" => "string"],
-      "reciever_vpa" => ["type" => "string"],
-      "details" => ["type" => "string"],
-      "status" => ["type" => "string"],
-      "time" => ["type" => "datetime"]
+      "t_type" => ["type" => "string"],
+      "reciever_vpa" => ["type" => "string"]
+      // "timestamp" => ["type" => "timestamp"]
     ];
   }
 
