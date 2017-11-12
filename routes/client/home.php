@@ -1,9 +1,5 @@
 <?php
 
-use App\Plan;
-use App\Company;
-use App\Reviews;
-use App\Likes;
 use Tuupola\Base62;
 use Firebase\JWT\JWT;
 use App\HomeTransformer;
