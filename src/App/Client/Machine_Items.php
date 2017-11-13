@@ -19,7 +19,8 @@ class Machine_Items extends \Spot\Entity
         return [
             "id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "pos" => ["type" => "string", "unsigned" => true], 
-            "mc_id" => ["type" => "string","unsigned"=>true],
+            "mc_id" => ["type" => "integer","unsigned"=>true],
+            "item_id" => ["type" => "integer","unsigned"=>true],
             "name" => ["type" => "string","unsigned"=>true],
             "price" => ["type" => "integer","unsigned"=>true],
             "tot_units" => ["type" => "integer"],

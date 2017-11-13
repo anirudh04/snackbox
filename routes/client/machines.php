@@ -1,8 +1,9 @@
 <?php
 
 use App\Machines;
-use App\MachinesTransformer;
 use App\Machine_Items;
+use App\MachinesTransformer;
+
 use App\Machine_ItemsTransformer;
 
 use Response\NotFoundResponse;
@@ -55,7 +56,7 @@ $app->get("/machines", function ($request, $response, $arguments) {
   $id=$decoded_token->id;
   $machine = $this->spot->mapper("App\Machines")
    ->all()
-        ->where(["admin_id" => $id]);
+        ->where(["merchant_id" => $id]);
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);

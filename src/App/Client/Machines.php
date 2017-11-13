@@ -15,16 +15,9 @@ class Machines extends \Spot\Entity
     return [
       "id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" =>true], 
       "address" => ["type" => "string"],
-      "local_admin_name" => ["type" => "string"],
-      "local_admin_phone" => ["type" => "integer"],
-      "upi_vpa" => ["type" => "string"],
       "latitude" => ["type" => "float"],
       "longitude" => ["type" => "float"],
-      "location" => ["type" => "string"],
-      "area_city" => ["type" => "string"],
-      "city" => ["type" => "string"],
-      "pincode" => ["type" => "integer"],
-      "admin_id" => ["type" => "string"]
+      "merchant_id" => ["type" => "integer"]
     ];
   }
 

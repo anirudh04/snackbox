@@ -1,9 +1,10 @@
 <?php
 
-use App\Orders;
-use App\OrdersTransformer;
+use App\Machine_Orders;
+use App\Machine_OrdersTransformer;
 use App\Machine_Items;
-use App\Order_ItemsTransformer;
+use App\Machine_ItemsTransformer;
+use App\Machine_Order_ItemsTransformer;
 
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
@@ -28,14 +29,15 @@ $app->get("/order/{id}", function ($request, $response, $arguments) {
 
 
     // $id=$decoded_token->id;
-    $items = $this->spot->mapper("App\Order_Items")
-        ->all();
+    $items = $this->spot->mapper("App\Machine_Order_Items")
+        ->all()
+        ->where(["order_id" => $id]);
 
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
 
-    $resource = new Collection($items, new Order_ItemsTransformer);
+    $resource = new Collection($items, new Machine_Order_ItemsTransformer);
     $data = $fractal->createData($resource)->toArray();
     return $response->withStatus(200)
     ->withHeader("Content-Type", "application/json")
@@ -53,13 +55,13 @@ $app->get("/orders", function ($request, $response, $arguments) {
 
 
   // $id=$decoded_token->id;
-  $order = $this->spot->mapper("App\Orders")
+  $order = $this->spot->mapper("App\Machine_Orders")
         ->all();
 
   $fractal = new Manager();
   $fractal->setSerializer(new DataArraySerializer);
 
-  $resource = new Collection($order, new OrdersTransformer);
+  $resource = new Collection($order, new Machine_OrdersTransformer);
   $data = $fractal->createData($resource)->toArray();
   return $response->withStatus(200)
   ->withHeader("Content-Type", "application/json")

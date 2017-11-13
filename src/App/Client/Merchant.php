@@ -9,16 +9,17 @@ use Spot\EventEmitter;
 use Spot\MapperInterface as Mapper;
 use Tuupola\Base62;
 
-class Business_Admin extends \Spot\Entity
+class Merchant extends \Spot\Entity
 {
-  protected static $table = "business_admin";
+  protected static $table = "merchant";
 
   public static function fields()
   {
     return [
       "id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
-      "admin_name" => ["type" => "string"], 
-      "phone_no" => ["type" => "integer"],   
+      "name" => ["type" => "string"], 
+      "phone" => ["type" => "integer"],   
+      "vpa" => ["type" => "string"],   
       "email" => ["type" => "string"],
       "password" => ["type" => "string"],
       "timestamp" => ["type" => "timestamp"]

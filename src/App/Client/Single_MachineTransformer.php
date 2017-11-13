@@ -22,7 +22,7 @@ class Single_MachineTransformer extends Fractal\TransformerAbstract
 
         return [
             "id" => (integer)$machines->id ?: 0,
-            "area_city" => (string)$machines->area_city ?: null
+            "address" => (string)$machines->address ?: null
         ];
     }
 
