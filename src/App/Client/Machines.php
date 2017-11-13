@@ -20,8 +20,6 @@ class Machines extends \Spot\Entity
       "upi_vpa" => ["type" => "string"],
       "latitude" => ["type" => "float"],
       "longitude" => ["type" => "float"],
-      "wifi_id" => ["type" => "string"],
-      "wifi_pass" => ["type" => "string"],
       "location" => ["type" => "string"],
       "area_city" => ["type" => "string"],
       "city" => ["type" => "string"],
